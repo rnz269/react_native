@@ -3,10 +3,18 @@ import React, {useState} from "react"
 import { View, TextInput, StyleSheet } from "react-native"
 
 export default function SearchInput(props) {
-	const {placeholder, ...rest} = props
+	console.log(props)
+	const {placeholder, onSubmit, ...rest} = props
 	const [text, setText] = useState('')
 
 	const handleChangeText = (newText) => setText(newText)
+	const handleSubmitEditing = () => {
+		if (!text) return
+		onSubmit(text)
+		setText('')
+		// text ? onSubmit(text) : return
+		// setText('')
+	}
 
 	return (
 		<View style = {styles.container}>
@@ -19,6 +27,7 @@ export default function SearchInput(props) {
 		        style={styles.textInput}
 		        clearButtonMode="always"
 		        onChangeText={handleChangeText}
+		        onSubmitEditing={handleSubmitEditing}
 	      />
       </View>
 	)

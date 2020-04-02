@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, ImageBackground, Text, View, KeyboardAvoidingView, Platform } from 'react-native';
 
 import SearchInput from "./components/SearchInput"
@@ -6,6 +6,9 @@ import getImageForWeather from './utils/getImageForWeather'
 
 
 export default function App() {
+  const [location, setLocation] = useState('San Francisco')
+  const handleUpdateLocation = (text) => setLocation(text)
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
       <ImageBackground 
@@ -14,10 +17,10 @@ export default function App() {
         imageStyle={styles.image}
       >
         <View style={styles.detailsContainer}>
-          <Text style={[styles.largeText, styles.textStyle]}>San Francisco</Text>
+          <Text style={[styles.largeText, styles.textStyle]}>{location}</Text>
           <Text style={[styles.smallText, styles.textStyle]}>Light Cloud</Text>
           <Text style={[styles.largeText, styles.textStyle]}>13°</Text>
-          <SearchInput placeholder="Search any city" />
+          <SearchInput onSubmit={handleUpdateLocation} placeholder="Search any city" />
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>

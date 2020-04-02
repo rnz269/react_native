@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, ImageBackground, Text, View, KeyboardAvoidingView, Platform } from 'react-native';
 
 import SearchInput from "./components/SearchInput"
@@ -6,8 +6,12 @@ import getImageForWeather from './utils/getImageForWeather'
 
 
 export default function App() {
-  const [location, setLocation] = useState('San Francisco')
+  const [location, setLocation] = useState('')
   const handleUpdateLocation = (text) => setLocation(text)
+
+  useEffect(()=> {
+    handleUpdateLocation('San Francisco')
+  }, []) 
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">

@@ -3,7 +3,6 @@ import React, {useState} from "react"
 import { View, TextInput, StyleSheet } from "react-native"
 
 export default function SearchInput(props) {
-	console.log(props)
 	const {placeholder, onSubmit, ...rest} = props
 	const [text, setText] = useState('')
 
@@ -12,8 +11,6 @@ export default function SearchInput(props) {
 		if (!text) return
 		onSubmit(text)
 		setText('')
-		// text ? onSubmit(text) : return
-		// setText('')
 	}
 
 	return (

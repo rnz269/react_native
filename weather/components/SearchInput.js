@@ -1,17 +1,24 @@
 
-import React from "react"
+import React, {useState} from "react"
 import { View, TextInput, StyleSheet } from "react-native"
 
 export default function SearchInput(props) {
+	const {placeholder, ...rest} = props
+	const [text, setText] = useState('')
+
+	const handleChangeText = (newText) => setText(newText)
+
 	return (
 		<View style = {styles.container}>
 			<TextInput
 		        autoCorrect={false}
-		        placeholder={props.placeholder}
+		        value={text}
+		        placeholder={placeholder}
 		        placeholderTextColor="white"
 		        underlineColorAndroid="transparent"
 		        style={styles.textInput}
 		        clearButtonMode="always"
+		        onChangeText={handleChangeText}
 	      />
       </View>
 	)

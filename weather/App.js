@@ -33,7 +33,7 @@ export default function App() {
 
 // once loading has been updated (ensure updated to true), run callback
 // we need userInput to have updated (to use it like an argument here) and loading updated to ensure
-// action is taken when loading = true (which if condition checks, but without useEffect would return if false)
+// action is taken only when loading = true. Otherwise, loading changing to false would retrigger.
   useEffect(()=> {
       async function tapAPI() {
         if (loading) {
@@ -88,7 +88,7 @@ export default function App() {
               <SearchInput placeholder="Search any city" onSubmit={handleUpdateInput}/>
             </View>
           )}
-          </View>
+        </View>
       </ImageBackground>
     </KeyboardAvoidingView>
   )

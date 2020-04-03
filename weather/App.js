@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
     backgroundColor: 'rgba(0,0,0,0.2)'
   }
 });

@@ -22,7 +22,6 @@ export default function App() {
 
 // update user input (temporarily city before checking validity)
   const handleUpdateInput = input => {
-    if (!input) return
     setUserInput(input)
   }  
 

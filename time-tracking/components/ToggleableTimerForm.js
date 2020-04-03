@@ -6,9 +6,6 @@ import TimerForm from "./TimerForm"
 export default function ToggleableTimerForm(props) {
 	return (
 		<View>
-			<Text>
-			Hello from ToggleableTimerForm!
-			</Text>
 		</View>
 	)
 }

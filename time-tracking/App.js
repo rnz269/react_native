@@ -7,8 +7,20 @@ import EditableTimer from "./components/EditableTimer"
 export default function App() {
   return (
     <View style={styles.appContainer}>
-      <ToggleableTimerForm />
-      <EditableTimer />
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Timers</Text>
+      </View>
+      <ScrollView style={styles.timerList}>
+        <ToggleableTimerForm />
+        <EditableTimer 
+          id={1}
+          title="Mow the lawn"
+          project="House Chores"
+          elapsed={600}
+          isRunning={false}
+          editFormOpen={true} 
+        />  
+      </ScrollView>
     </View>
   );
 }
@@ -16,8 +28,19 @@ export default function App() {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
+  titleContainer: {
+    alignItems: 'center',    
+    paddingTop: 40,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#D6D7DA",  
+  },
+  timerList: {
+    paddingBottom: 15,
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 18,
+  }
 });

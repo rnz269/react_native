@@ -10,7 +10,10 @@ export default function App() {
   const createTimer = () => {
     // append to editable timer array of objects
     // [timer1, timer2, timer3], where timer1 = {id, title, project, elapsed, isRunning, editFormOpen}
-
+    // wait... a timer is a component. We know in the render method, we can simply have an array of components
+    // so how to get to array of components? start with array of data -> map each datum to a component
+    // so createTimer should simply append an object with props id, title, project, etc. to array of objects
+    // which should be simple -> access prev state, load into a new state var, then add new object
   }
 
 

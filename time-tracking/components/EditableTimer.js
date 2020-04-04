@@ -1,14 +1,26 @@
-import React from "react"
-import {StyleSheet, Text, View} from "react-native"
+import React, {useState} from "react"
+import { Text, View} from "react-native"
 
 import Timer from "./Timer"
 import TimerForm from "./TimerForm"
 
-export default function EditableTimer({id, title, project, elapsed, isRunning, editFormOpen}) {
+export default function EditableTimer({id, title, project, elapsed, isRunning}) {
+	const [editFormOpen, setEditFormOpen] = useState(false)
+	const toggleOpen = () => {
+		setEditFormOpen(prevEditFormOpen => !prevEditFormOpen)
+	}
+
+	const updateButton = () => {
+		// should call editButton AND call passed down function that updates data
+		toggleOpen()
+	}
+
+
+
 	if (editFormOpen) {
 		return (
 			<View>
-				<TimerForm id={id} title={title} project={project} />
+				<TimerForm id={id} title={title} project={project} onCancel={toggleOpen} />
 			</View>
 		)
 	}
@@ -20,7 +32,8 @@ export default function EditableTimer({id, title, project, elapsed, isRunning, e
 				project={project}
 				elapsed={elapsed}
 				isRunning={isRunning}
-				editFormOpen={false}
+				editFormOpen={editFormOpen}
+				onEdit={toggleOpen}
 			/>
 		</View>
 	)

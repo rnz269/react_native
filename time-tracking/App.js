@@ -7,35 +7,53 @@ import EditableTimer from "./components/EditableTimer"
 import {newTimer} from "./utils/TimerUtils"
 
 export default function App() {
+  // state
   const [timers, setTimers] = useState([])
+  const [utc, setUTC] = useState(0)
 
+  // CONSTANT TIME INTERVAL
+  const SECOND = 1000
+
+  // increment time function, checks every second which timers are running, increments them
+  useEffect(()=>{
+    setTimeout(()=> {
+      setUTC(utc => utc + 1)
+
+      setTimers(prevTimers => {
+        const newTimers = [...prevTimers]
+        const incrementTimers = newTimers.map(timer => {
+          if (timer.isRunning) timer.elapsed += SECOND
+          return (timer)
+        })
+        return incrementTimers
+      })
+
+    }, SECOND)
+  }, [utc])
+
+// append to our array of timer objects a new timer or update an existing timer
   const createOrUpdateTimer = (id, titleInput, projectInput) => {
-   /* append to editable timer array of objects
-    [timer1, timer2, timer3], where timer1 = {id, title, project, elapsed, isRunning, editFormOpen}
-    wait... a timer is a component. We know in the render method, we can simply have an array of components
-    so how to get to array of components? start with array of data -> map each datum to a component
-    so createTimer should simply append an object with props id, title, project, etc. to array of objects
-    which should be simple -> access prev state, load into a new state var, then add new object */
-
-    // if id exists, we're updating
+    // if id already exists, we're updating
     if (id) {
       setTimers(prevTimers => {
         const newTimers = [...prevTimers]
-        // cycle through array to find id match
         const timerChanged = newTimers.find(timer => timer.id === id)
         timerChanged.title = titleInput
         timerChanged.project = projectInput
         return newTimers
       })
     }
-    // if id doesn't exist, we're creating
-    const addedTimer = newTimer({title:titleInput, project: projectInput})
-    setTimers(prevTimers => {
-      const newTimers = [...prevTimers, addedTimer]
-      return newTimers
-    })
+  // else if id doesn't exist, we're creating
+    else {
+      const addedTimer = newTimer({title:titleInput, project: projectInput})
+      setTimers(prevTimers => {
+        const newTimers = [...prevTimers, addedTimer]
+        return newTimers
+      })
+    }
   }
 
+  // start/stop timer running
   const toggleTimer = id => {
     setTimers(prevTimers => {
       const newTimers = [...prevTimers]
@@ -45,6 +63,7 @@ export default function App() {
     })
   }
 
+  // remove timer from display
   const removeTimer = id => {
     setTimers(prevTimers => {
       const newTimers = [...prevTimers]
@@ -53,10 +72,7 @@ export default function App() {
     })
   }
 
-  useEffect(()=>{
-    console.log(timers)
-  }, [timers])
-
+  // map our array of timer objects from state to an array of Editable Timer components, supplementing with button behaviors
   const timerComponents = timers.map(timer => <EditableTimer key={timer.id} toggleTimer={toggleTimer} removeTimer={removeTimer} handleSubmit={createOrUpdateTimer} { ...timer} />)
        
   return (

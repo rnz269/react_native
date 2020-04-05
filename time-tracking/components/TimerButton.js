@@ -1,11 +1,11 @@
 import React from "react"
 import {TouchableOpacity, Text, StyleSheet} from "react-native"
 
-export default function TimerButton({color, title, small, onPress}) {
+export default function TimerButton({color, title, small, id, titleInput, projectInput, onPress}) {
 	return (
 		<TouchableOpacity
 			style={[styles.button, {borderColor: color}]}
-			onPress={onPress}
+			onPress={()=> onPress(id, titleInput, projectInput)}
 		>
 			<Text
 				style={[
@@ -22,12 +22,21 @@ export default function TimerButton({color, title, small, onPress}) {
 
 const styles = StyleSheet.create({
 	button: {
-		marginTop: 10,
 		minWidth: 100,
+		marginTop: 10,
 		borderWidth: 2,
 		borderRadius: 3,
 	},
-	buttonText: {},
-	small: {},
-	large: {},
+	small: {
+		fontSize: 14,
+		padding: 5
+	},
+	large: {
+		fontSize: 16,
+		padding: 10,
+	},
+	buttonText: {
+		textAlign: 'center',
+		fontWeight: 'bold',
+	},
 })

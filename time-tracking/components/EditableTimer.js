@@ -20,7 +20,7 @@ export default function EditableTimer({id, title, project, elapsed, isRunning}) 
 	if (editFormOpen) {
 		return (
 			<View>
-				<TimerForm id={id} title={title} project={project} onCancel={toggleOpen} />
+				<TimerForm id={id} title={title} project={project} toggleOpen={toggleOpen} />
 			</View>
 		)
 	}

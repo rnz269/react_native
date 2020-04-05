@@ -3,7 +3,8 @@ import {View, Text, StyleSheet, TextInput} from "react-native"
 
 import TimerButton from "./TimerButton"
 
-export default function TimerForm({id, title, project, handleSubmit, onCancel}) {
+export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
+	// console.log(id)
 	// load in to form input the current value from props
 	// exception to anti-pattern since prop is only seed data for internal controlled component
 	const [titleInput, setTitleInput] = useState(title)
@@ -13,15 +14,13 @@ export default function TimerForm({id, title, project, handleSubmit, onCancel}) 
 		name === "title" ? setTitleInput(text) : setProjectInput(text)
 	}
 
-	const handleSubmitEditing = (name, text) => {
-		// cb to supply App with new values 
-		// define in App a cb that takes arguments name & text and updates according piece of state
+	const handleSubmit = () => {
+		toggleOpen()
+		onSubmit(id, titleInput, projectInput)
 	}
 
-
-
-
 	const submitText = id ? 'Update' : 'Create'
+	// console.log(id)
 
 	return (
 		<View style={styles.formContainer}>
@@ -35,7 +34,6 @@ export default function TimerForm({id, title, project, handleSubmit, onCancel}) 
 						clearButtonMode="always"
 						value={titleInput}
 						onChangeText={text => handleChangeText("title", text)}
-						onSubmitEditing = {text => handleSubmitEditing("title", text)}
 					/>
 				</View>
 
@@ -50,19 +48,24 @@ export default function TimerForm({id, title, project, handleSubmit, onCancel}) 
 						clearButtonMode="always"
 						value={projectInput}
 						onChangeText={text => handleChangeText("project", text)}
-						onSubmitEditing = {text => handleSubmitEditing("project", text)}
 					/>
 				</View>
 
 			</View>
 
 			<View style={styles.buttonGroup}>
-				<TimerButton small color="#21BA45" title={submitText} onPress={handleSubmit}/>
-				<TimerButton small color="#D82828" title="Cancel" onPress={onCancel}/>
+				<TimerButton small color="#21BA45" title={submitText} onPress={handleSubmit} id={id} titleInput={titleInput} projectInput={projectInput}/>
+				<TimerButton small color="#D82828" title="Cancel" onPress={toggleOpen}/>
 			</View>
 
 		</View>
 		)
+}
+
+TimerForm.defaultProps = {
+	id: false,
+	title: "",
+	project: "",
 }
 
 const styles = StyleSheet.create({

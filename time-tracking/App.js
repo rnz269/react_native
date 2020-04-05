@@ -1,45 +1,51 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
 import ToggleableTimerForm from "./components/ToggleableTimerForm"
 import EditableTimer from "./components/EditableTimer"
 
+import {newTimer} from "./utils/TimerUtils"
+
 export default function App() {
   const [timers, setTimers] = useState([])
 
-  const createTimer = () => {
-    // append to editable timer array of objects
-    // [timer1, timer2, timer3], where timer1 = {id, title, project, elapsed, isRunning, editFormOpen}
-    // wait... a timer is a component. We know in the render method, we can simply have an array of components
-    // so how to get to array of components? start with array of data -> map each datum to a component
-    // so createTimer should simply append an object with props id, title, project, etc. to array of objects
-    // which should be simple -> access prev state, load into a new state var, then add new object
+  const createOrUpdateTimer = (id, titleInput, projectInput) => {
+   /* append to editable timer array of objects
+    [timer1, timer2, timer3], where timer1 = {id, title, project, elapsed, isRunning, editFormOpen}
+    wait... a timer is a component. We know in the render method, we can simply have an array of components
+    so how to get to array of components? start with array of data -> map each datum to a component
+    so createTimer should simply append an object with props id, title, project, etc. to array of objects
+    which should be simple -> access prev state, load into a new state var, then add new object */
+
+    // if id exists, we're updating
+    if (id) {
+      setTimers(prevTimers => {
+        const newTimers = [...prevTimers]
+        // cycle through array to find id match
+        const timerChanged = newTimers.find(timer => timer.id === id)
+        timerChanged.title = titleInput
+        timerChanged.project = projectInput
+        return newTimers
+      })
+    }
+    // if id doesn't exist, we're creating
+    const addedTimer = newTimer({title:titleInput, project: projectInput})
+    setTimers(prevTimers => {
+      const newTimers = [...prevTimers, addedTimer]
+      return newTimers
+    })
   }
 
-
+  const timerComponents = timers.map(timer => <EditableTimer key={timer.id} handleSubmit={createOrUpdateTimer} { ...timer} />)
+       
   return (
     <View style={styles.appContainer}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Timers</Text>
       </View>
       <ScrollView style={styles.timerList}>
-        <ToggleableTimerForm isOpen={false} handleSubmit={createTimer}/>
-        <EditableTimer 
-          id={1}
-          title="Mow the lawn"
-          project="House Chores"
-          elapsed={6000000}
-          isRunning={false}
-          editFormOpen={false} 
-        />
-          <EditableTimer 
-          id={1}
-          title="Move that bus"
-          project="Become Superman"
-          elapsed={12000000}
-          isRunning={false}
-          editFormOpen={true} 
-        />  
+        <ToggleableTimerForm handleSubmit={createOrUpdateTimer}/>
+        {timerComponents}
       </ScrollView>
     </View>
   );

@@ -21,7 +21,7 @@ export default function ToggleableTimerForm({handleSubmit}) {
 	}
 	return (
 		<View>
-			<TimerForm onSubmit={handleSubmit} onCancel={toggleOpen}/>
+			<TimerForm onSubmit={handleSubmit} toggleOpen={toggleOpen}/>
 		</View>
 	)
 }

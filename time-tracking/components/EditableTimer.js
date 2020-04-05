@@ -4,18 +4,11 @@ import { Text, View} from "react-native"
 import Timer from "./Timer"
 import TimerForm from "./TimerForm"
 
-export default function EditableTimer({id, title, project, elapsed, isRunning}) {
+export default function EditableTimer({id, title, project, elapsed, isRunning, toggleTimer, removeTimer}) {
 	const [editFormOpen, setEditFormOpen] = useState(false)
 	const toggleOpen = () => {
 		setEditFormOpen(prevEditFormOpen => !prevEditFormOpen)
 	}
-
-	const updateButton = () => {
-		// should call editButton AND call passed down function that updates data
-		toggleOpen()
-	}
-
-
 
 	if (editFormOpen) {
 		return (
@@ -33,7 +26,9 @@ export default function EditableTimer({id, title, project, elapsed, isRunning}) 
 				elapsed={elapsed}
 				isRunning={isRunning}
 				editFormOpen={editFormOpen}
-				onEdit={toggleOpen}
+				editTimer={toggleOpen}
+				toggleTimer={toggleTimer}
+				removeTimer={removeTimer}
 			/>
 		</View>
 	)

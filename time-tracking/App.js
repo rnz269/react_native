@@ -36,7 +36,28 @@ export default function App() {
     })
   }
 
-  const timerComponents = timers.map(timer => <EditableTimer key={timer.id} handleSubmit={createOrUpdateTimer} { ...timer} />)
+  const toggleTimer = id => {
+    setTimers(prevTimers => {
+      const newTimers = [...prevTimers]
+      const timerToggled = newTimers.find(timer => timer.id === id)
+      timerToggled.isRunning = !timerToggled.isRunning
+      return newTimers
+    })
+  }
+
+  const removeTimer = id => {
+    setTimers(prevTimers => {
+      const newTimers = [...prevTimers]
+      const filteredTimers = newTimers.filter(timer => timer.id !== id)
+      return filteredTimers
+    })
+  }
+
+  useEffect(()=>{
+    console.log(timers)
+  }, [timers])
+
+  const timerComponents = timers.map(timer => <EditableTimer key={timer.id} toggleTimer={toggleTimer} removeTimer={removeTimer} handleSubmit={createOrUpdateTimer} { ...timer} />)
        
   return (
     <View style={styles.appContainer}>

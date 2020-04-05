@@ -24,7 +24,10 @@ export default function Timer({id, title, project, elapsed, isRunning, editFormO
 			</View>
 			
 			<View>
-				<TimerButton id={id} color="green" title="Start" onPress={toggleTimer} />
+				{isRunning 
+					? <TimerButton id={id} color="red" title="Stop" onPress={toggleTimer} />
+					: <TimerButton id={id} color="green" title="Start" onPress={toggleTimer} />
+				}
 			</View>
 
 		</View>

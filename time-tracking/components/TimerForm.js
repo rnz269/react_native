@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useState, useRef} from "react"
 import {View, Text, StyleSheet, TextInput} from "react-native"
 
 import TimerButton from "./TimerButton"
@@ -9,6 +9,9 @@ export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
 	// exception to anti-pattern since prop is only seed data for internal controlled component
 	const [titleInput, setTitleInput] = useState(title)
 	const [projectInput, setProjectInput] = useState(project)
+
+	const titleRef = useRef(null)
+	const projectRef = useRef(null)
 
 	const handleChangeText = (name, text) => {
 		name === "title" ? setTitleInput(text) : setProjectInput(text)
@@ -25,28 +28,32 @@ export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
 		<View style={styles.formContainer}>
 
 			<View style={styles.attributeContainer}>
-				<Text style={styles.textInputTitle}>Title</Text>
+				<Text onPress={()=> titleRef.current.focus()} style={styles.textInputTitle}>Title</Text>
 
 				<View style={styles.textInputContainer}>
 					<TextInput
+						ref={titleRef}
 						style={styles.textInput}
 						clearButtonMode="always"
 						value={titleInput}
 						onChangeText={text => handleChangeText("title", text)}
+						onSubmitEditing={()=> projectRef.current.focus()}
 					/>
 				</View>
 
 			</View>
 
 			<View style={styles.attributeContainer}>
-				<Text style={styles.textInputTitle}>Project</Text>
+				<Text onPress={()=> projectRef.current.focus()} style={styles.textInputTitle}>Project</Text>
 
 				<View style={styles.textInputContainer}>
 					<TextInput
+						ref={projectRef}
 						style={styles.textInput}
 						clearButtonMode="always"
 						value={projectInput}
 						onChangeText={text => handleChangeText("project", text)}
+						onSubmitEditing={()=> handleSubmit(id, titleInput, projectInput)}
 					/>
 				</View>
 

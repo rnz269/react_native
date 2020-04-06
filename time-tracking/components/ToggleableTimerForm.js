@@ -10,8 +10,6 @@ export default function ToggleableTimerForm({handleSubmit}) {
 		setIsOpen(prevIsOpen => !prevIsOpen)
 	}
 
-
-
 	if (!isOpen) {
 	return (
 		<View style={styles.buttonContainer}>

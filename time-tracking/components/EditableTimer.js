@@ -6,14 +6,21 @@ import TimerForm from "./TimerForm"
 
 export default function EditableTimer({id, title, project, elapsed, isRunning, onSubmit, toggleTimer, removeTimer}) {
 	const [editFormOpen, setEditFormOpen] = useState(false)
+
 	const toggleOpen = () => {
 		setEditFormOpen(prevEditFormOpen => !prevEditFormOpen)
+	}
+
+// supercharge passed down cb with EditableTimer's toggleOpen method (to close form upon creation)
+	const handleSubmit = (id, title, project) => {
+		toggleOpen()
+		onSubmit(id, title, project)
 	}
 
 	if (editFormOpen) {
 		return (
 			<View>
-				<TimerForm id={id} title={title} project={project} onSubmit={onSubmit} toggleOpen={toggleOpen} />
+				<TimerForm id={id} title={title} project={project} onSubmit={handleSubmit} toggleOpen={toggleOpen} />
 			</View>
 		)
 	}

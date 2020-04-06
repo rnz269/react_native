@@ -10,10 +10,13 @@ export default function Timer({id, title, project, elapsed, isRunning, editFormO
 // id is defined within this Timer file. No need for handleRemoveTimer to accept an argument from child.
 // so no need to pass id downward for the remove function to execute. when child calls this callback function, 
 // parent can receive args passed to the function AND parents still have access to their own state & props.
+
+// supercharge passed down cb with Timer's id data
 	const handleRemoveTimer = () => {
 		removeTimer(id)
 	}
 
+// supercharge passed down cb with Timer's id data
 	const handleToggleTimerPress = () => {
 		toggleTimer(id)
 	}

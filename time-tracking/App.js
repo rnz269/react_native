@@ -32,20 +32,20 @@ export default function App() {
   }, [utc])
 
 // append to our array of timer objects a new timer or update an existing timer
-  const createOrUpdateTimer = (id, titleInput, projectInput) => {
+  const createOrUpdateTimer = (id, title, project) => {
     // if id already exists, we're updating
     if (id) {
       setTimers(prevTimers => {
         const newTimers = [...prevTimers]
         const timerChanged = newTimers.find(timer => timer.id === id)
-        timerChanged.title = titleInput
-        timerChanged.project = projectInput
+        timerChanged.title = title
+        timerChanged.project = project
         return newTimers
       })
     }
   // else if id doesn't exist, we're creating
     else {
-      const addedTimer = newTimer({title:titleInput, project: projectInput})
+      const addedTimer = newTimer({title:title, project: project})
       setTimers(prevTimers => {
         const newTimers = [...prevTimers, addedTimer]
         return newTimers

@@ -6,8 +6,15 @@ import TimerButton from "./TimerButton"
 
 export default function ToggleableTimerForm({onSubmit}) {
 	const [isOpen, setIsOpen] = useState(false)
+
 	const toggleOpen = () => {
 		setIsOpen(prevIsOpen => !prevIsOpen)
+	}
+
+// supercharge passed down cb with ToggleableTimerForm's toggleOpen method (to close form upon creation)
+	const handleSubmit = (id, title, project) => {
+		toggleOpen()
+		onSubmit(id, title, project)
 	}
 
 	if (!isOpen) {
@@ -19,7 +26,7 @@ export default function ToggleableTimerForm({onSubmit}) {
 	}
 	return (
 		<View>
-			<TimerForm onSubmit={onSubmit} toggleOpen={toggleOpen}/>
+			<TimerForm onSubmit={handleSubmit} toggleOpen={toggleOpen}/>
 		</View>
 	)
 }

@@ -16,8 +16,8 @@ export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
 		name === "title" ? setTitleInput(text) : setProjectInput(text)
 	}
 
+// supercharge passed down cb with TimerForm's id, titleInput, projectInput data
 	const handleSubmit = () => {
-		toggleOpen()
 		onSubmit(id, titleInput, projectInput)
 	}
 

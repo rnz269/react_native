@@ -1,7 +1,7 @@
 import React from "react"
 import {TouchableOpacity, Text, StyleSheet} from "react-native"
 
-export default function TimerButton({color, title, small, id, titleInput, projectInput, onPress}) {
+export default function TimerButton({color, title, small, onPress}) {
 	return (
 		<TouchableOpacity
 			style={[styles.button, {borderColor: color}]}

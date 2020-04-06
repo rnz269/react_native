@@ -1,5 +1,6 @@
 import React, {useState, useRef} from "react"
 import {View, Text, StyleSheet, TextInput} from "react-native"
+import PropTypes from 'prop-types'
 
 import TimerButton from "./TimerButton"
 
@@ -67,8 +68,16 @@ export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
 		)
 }
 
+TimerForm.propTypes = {
+	id: PropTypes.string,
+	title: PropTypes.string,
+	project: PropTypes.string,
+	onSubmit: PropTypes.func.isRequired,
+	toggleOpen: PropTypes.func.isRequired,
+}
+
 TimerForm.defaultProps = {
-	id: false,
+	id: null,
 	title: "",
 	project: "",
 }

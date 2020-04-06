@@ -13,8 +13,8 @@ export default function EditableTimer({id, title, project, elapsed, isRunning, o
 
 // supercharge passed down cb with EditableTimer's toggleOpen method (to close form upon creation)
 	const handleSubmit = (id, title, project) => {
-		toggleOpen()
 		onSubmit(id, title, project)
+		toggleOpen()
 	}
 
 	if (editFormOpen) {

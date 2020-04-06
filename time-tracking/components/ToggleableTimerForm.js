@@ -13,8 +13,8 @@ export default function ToggleableTimerForm({onSubmit}) {
 
 // supercharge passed down cb with ToggleableTimerForm's toggleOpen method (to close form upon creation)
 	const handleSubmit = (id, title, project) => {
-		toggleOpen()
 		onSubmit(id, title, project)
+		toggleOpen()
 	}
 
 	if (!isOpen) {

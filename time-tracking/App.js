@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 
 import ToggleableTimerForm from "./components/ToggleableTimerForm"
 import EditableTimer from "./components/EditableTimer"
@@ -80,10 +80,12 @@ export default function App() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Timers</Text>
       </View>
-      <ScrollView style={styles.timerList}>
-        <ToggleableTimerForm onSubmit={createOrUpdateTimer}/>
-        {timerComponents}
-      </ScrollView>
+      <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
+        <ScrollView style={styles.timerList}>
+          <ToggleableTimerForm onSubmit={createOrUpdateTimer}/>
+          {timerComponents}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -91,6 +93,9 @@ export default function App() {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
+  },
+  timerListContainer: {
+    flex: 1
   },
   titleContainer: {
     alignItems: 'center',    

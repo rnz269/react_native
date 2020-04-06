@@ -5,7 +5,7 @@ export default function TimerButton({color, title, small, id, titleInput, projec
 	return (
 		<TouchableOpacity
 			style={[styles.button, {borderColor: color}]}
-			onPress={()=> onPress(id, titleInput, projectInput)}
+			onPress={onPress}
 		>
 			<Text
 				style={[

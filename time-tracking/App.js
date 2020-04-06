@@ -73,7 +73,7 @@ export default function App() {
   }
 
   // map our array of timer objects from state to an array of Editable Timer components, supplementing with button behaviors
-  const timerComponents = timers.map(timer => <EditableTimer key={timer.id} toggleTimer={toggleTimer} removeTimer={removeTimer} handleSubmit={createOrUpdateTimer} { ...timer} />)
+  const timerComponents = timers.map(timer => <EditableTimer key={timer.id} toggleTimer={toggleTimer} removeTimer={removeTimer} onSubmit={createOrUpdateTimer} { ...timer} />)
        
   return (
     <View style={styles.appContainer}>
@@ -81,7 +81,7 @@ export default function App() {
         <Text style={styles.title}>Timers</Text>
       </View>
       <ScrollView style={styles.timerList}>
-        <ToggleableTimerForm handleSubmit={createOrUpdateTimer}/>
+        <ToggleableTimerForm onSubmit={createOrUpdateTimer}/>
         {timerComponents}
       </ScrollView>
     </View>

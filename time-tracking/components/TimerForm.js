@@ -4,7 +4,6 @@ import {View, Text, StyleSheet, TextInput} from "react-native"
 import TimerButton from "./TimerButton"
 
 export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
-	// console.log("timerForm:", id)
 	// load in to form input the current value from props
 	// exception to anti-pattern since prop is only seed data for internal controlled component
 	const [titleInput, setTitleInput] = useState(title)
@@ -53,14 +52,14 @@ export default function TimerForm({id, title, project, onSubmit, toggleOpen}) {
 						clearButtonMode="always"
 						value={projectInput}
 						onChangeText={text => handleChangeText("project", text)}
-						onSubmitEditing={()=> handleSubmit(id, titleInput, projectInput)}
+						onSubmitEditing={handleSubmit}
 					/>
 				</View>
 
 			</View>
 
 			<View style={styles.buttonGroup}>
-				<TimerButton small color="#21BA45" title={submitText} onPress={handleSubmit} id={id} titleInput={titleInput} projectInput={projectInput}/>
+				<TimerButton small color="#21BA45" title={submitText} onPress={handleSubmit}/>
 				<TimerButton small color="#D82828" title="Cancel" onPress={toggleOpen}/>
 			</View>
 

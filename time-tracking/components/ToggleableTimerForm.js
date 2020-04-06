@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from "react-native"
 import TimerForm from "./TimerForm"
 import TimerButton from "./TimerButton"
 
-export default function ToggleableTimerForm({handleSubmit}) {
+export default function ToggleableTimerForm({onSubmit}) {
 	const [isOpen, setIsOpen] = useState(false)
 	const toggleOpen = () => {
 		setIsOpen(prevIsOpen => !prevIsOpen)
@@ -19,7 +19,7 @@ export default function ToggleableTimerForm({handleSubmit}) {
 	}
 	return (
 		<View>
-			<TimerForm onSubmit={handleSubmit} toggleOpen={toggleOpen}/>
+			<TimerForm onSubmit={onSubmit} toggleOpen={toggleOpen}/>
 		</View>
 	)
 }

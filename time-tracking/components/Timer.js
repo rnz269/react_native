@@ -41,8 +41,8 @@ export default function Timer({id, title, project, elapsed, isRunning, editTimer
 			
 			<View>
 				{isRunning 
-					? <TimerButton id={id} color="red" title="Stop" onPress={handleToggleTimerPress} />
-					: <TimerButton id={id} color="green" title="Start" onPress={handleToggleTimerPress} />
+					? <TimerButton color="red" title="Stop" onPress={handleToggleTimerPress} />
+					: <TimerButton color="green" title="Start" onPress={handleToggleTimerPress} />
 				}
 			</View>
 

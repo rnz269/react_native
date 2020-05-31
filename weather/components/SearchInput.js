@@ -7,6 +7,7 @@ export default function SearchInput(props) {
 	const {placeholder, onSubmit, ...rest} = props
 	const [text, setText] = useState('')
 
+	// we pass handleChangeText cb function to child, textInput
 	const handleChangeText = (newText) => setText(newText)
 	const handleSubmitEditing = () => {
 		if (!text) return

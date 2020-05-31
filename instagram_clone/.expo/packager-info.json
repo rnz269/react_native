@@ -2,8 +2,8 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 82836,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "packagerPid": 83588,
+  "expoServerNgrokUrl": "https://wv-f47.rnz269.instagram-clone.exp.direct",
+  "packagerNgrokUrl": "https://packager.wv-f47.rnz269.instagram-clone.exp.direct",
+  "ngrokPid": 83616
 }

@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
 	},
 
 	attributeContainer: {
-		marginVertical: 8
+		marginVertical: 8,
 	},
 
 	textInputContainer: {

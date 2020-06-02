@@ -13,8 +13,8 @@ export default function AuthorRow({fullname, linkText, onPressLinkText}) {
 		<View style={styles.container}>
 			<Avatar 
 				size={35}
-				backgroundColor={"blue"}
-				initials={"RN"}
+				backgroundColor={getAvatarColor(fullname)}
+				initials={getInitials(fullname)}
 			/>
 			<Text style={styles.text} numberOfLines={1}>
 				{fullname}
@@ -32,6 +32,7 @@ export default function AuthorRow({fullname, linkText, onPressLinkText}) {
 
 const styles = StyleSheet.create({
 	container: {
+		height: 50,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",

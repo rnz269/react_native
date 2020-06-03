@@ -1,18 +1,52 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import Status from './components/Status'
+import MessageList from './components/MessageList'
+import { createTextMessage, createImageMessage, createLocationMessage } from './utils/MessageUtils'
 
 export default function App() {
+
+  // initialize state with some data
+  const [messages, setMessages] = useState([
+    createImageMessage('https://unsplash.it/300/300'),
+    createTextMessage('World'),
+    createTextMessage('Hello'),
+    createLocationMessage({
+      latitude: 37.78825,
+      longitude: -122.4324,
+      })
+    ])
+
+  const handlePressMessage = () => {}
+
+  const renderMessageList = () => {
+    return (
+      <View style={styles.content}>
+        <MessageList messages={messages} onPressMessage={handlePressMessage} />
+      </View>
+      )
+  }
+
+  const renderInputMethodEditor = ()=> {
+    return (
+      <View style={styles.inputMethodEditor}></View>
+      )
+  }
+
+  const renderToolbar = ()=> {
+    return (
+      <View style={styles.toolbar}></View>
+      )
+  }
+
+
   return (
     <View style={styles.container}>
       <Status />
-      <View style={styles.messageList}>
-      </View>
-      <View style={styles.toolbar}>
-      </View>
-      <View style={styles.inputMethodEditor}>
-      </View>
+      {renderMessageList()}
+      {renderInputMethodEditor()}
+      {renderToolbar()}
     </View>
   );
 }
@@ -22,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  messageList: {
+  content: {
     flex: 1,
     backgroundColor: 'white',
   },

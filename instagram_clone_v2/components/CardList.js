@@ -26,6 +26,8 @@ export default function CardList({items, onPressComments, commentsForItem}) {
 		)
 	}
 
+// need extraData because FlatList otherwise only rerenders if data prop
+// has changed. we want it to rerender if a new comment has been added
 	return (
 		<FlatList
 			data={items}

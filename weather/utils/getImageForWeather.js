@@ -1,5 +1,8 @@
 /* eslint-disable global-require */
 
+// images is an object. There are 3 ways to access values in object. One is using object[property]
+// https://dmitripavlutin.com/access-object-properties-javascript/
+
 const images = {
   Clear: require('../assets/clear.png'),
   Hail: require('../assets/hail.png'),

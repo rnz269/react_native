@@ -13,10 +13,22 @@ export default function EditableTimer({id, title, project, elapsed, isRunning, o
 	}
 
 // supercharge passed down cb with EditableTimer's toggleOpen method (to close form upon creation)
-// the props to EditableTimer are the original, unedited version. we get the updated ones from TimerForm
+// we want to use arguments provided by child when child calls function. Not using original props from parent here, since edits may have occured.
 	const handleSubmit = (id, title, project) => {
 		onSubmit(id, title, project)
 		toggleOpen()
+	}
+
+// id isn't going to change in child -- can use id provided by parent.
+// can't do this with handleSubmit -- because title & project may have changed in child
+	const handleToggleTimer = () => {
+		toggleTimer(id)
+	}
+
+// id isn't going to change in child -- can use id provided by parent.
+// can't do this with handleSubmit -- because title & project may have changed in child
+	const handleRemoveTimer = () => {
+		removeTimer(id)
 	}
 
 	if (editFormOpen) {
@@ -25,18 +37,19 @@ export default function EditableTimer({id, title, project, elapsed, isRunning, o
 				<TimerForm id={id} title={title} project={project} onSubmit={handleSubmit} toggleOpen={toggleOpen} />
 			</View>
 		)
+
+		
 	}
 	return (
 		<View>
 			<Timer 
-				id={id}
 				title={title}
 				project={project}
 				elapsed={elapsed}
 				isRunning={isRunning}
 				editTimer={toggleOpen}
-				toggleTimer={toggleTimer}
-				removeTimer={removeTimer}
+				toggleTimer={handleToggleTimer}
+				removeTimer={handleRemoveTimer}
 			/>
 		</View>
 	)

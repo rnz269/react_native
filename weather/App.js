@@ -4,7 +4,7 @@ import { StyleSheet, ImageBackground, Text, View, KeyboardAvoidingView, Platform
 import SearchInput from "./components/SearchInput"
 import getImageForWeather from './utils/getImageForWeather'
 
-import {fetchLocationId, fetchWeather } from "./utils/api"
+import { fetchLocationId, fetchWeather } from "./utils/api"
 
 
 export default function App() {
@@ -20,20 +20,22 @@ export default function App() {
     handleUpdateInput('San Francisco')
   }, []) 
 
-// update user input (temporarily city before checking validity)
+// update user input, so it's accessible to tapAPI
   const handleUpdateInput = input => {
     setUserInput(input)
   }  
 
-// once user input has updated, setLoading
+// follows immediately after userInput has updated. Here, we set loading to true.
   useEffect(()=> {
     setLoading(true)
   }, [userInput])
 
-// once loading has been updated (ensure updated to true), run callback
-// we need userInput to have updated (to use it like an argument here) and loading updated to ensure
-// action is taken only when loading = true. Otherwise, loading changing to false would retrigger.
+
+// follows immediately after loading has updated. Within, we ensure loading has updated to true.
+// useEffect hook can't have async callback: useEffect(async()=>{},[])
+// therefore, must define an async function within and then call it. Done below:
   useEffect(()=> {
+    // define async function
       async function tapAPI() {
         if (loading) {
           try {
@@ -50,6 +52,7 @@ export default function App() {
           }
         }
       }
+     // call function
     tapAPI()
   }, [loading])
 
@@ -122,6 +125,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.2)'
   }
 });

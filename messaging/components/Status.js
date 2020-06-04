@@ -8,7 +8,7 @@ export default function Status() {
 	const backgroundColor = isConnected ? {"backgroundColor": "white"} : {"backgroundColor": "red"}
 	const barStyle = isConnected ? "dark-content" : "light-content"
 
-	// on mount
+	// on mount, add a network connectivity change listener, set cnxn
 	useEffect(()=> {
 		async function fetchConnectivity() {
 			NetInfo.isConnected.addEventListener('connectionChange', handleChange)
@@ -37,12 +37,10 @@ export default function Status() {
 		/>
 	)
 
-	// despite statusBar being inside messageContainer, statusBar
-	// still renders at top while messageContainer renders below
-	// this is because statusBar configures, doesn't render
-	// ios renders the status bar automatically
+	// statusBar configures, doesn't actually render text
+	// can be included anywhere in component hierarchy
 	const messageContainer = (
-		<View style={styles.messageContainer}>
+		<View style={styles.messageContainer} pointerEvents={'none'}>
 			{statusBar}
 			{!isConnected && (
 				<View style={styles.bubble}>
@@ -53,6 +51,7 @@ export default function Status() {
 		</View>
 	)
 
+	// what's returned from Status component
 	if (Platform.OS === 'ios') {
 		return (
 			<View style={[styles.status, backgroundColor]}>
@@ -63,7 +62,6 @@ export default function Status() {
 	
 	return ({messageContainer})
 }
-
 
 
 const statusHeight = (Platform.OS === 'ios' ? Constants.statusBarHeight : 0)

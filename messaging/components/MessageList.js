@@ -7,14 +7,11 @@ import {MessageShape} from '../utils/MessageUtils'
 
 export default function MessageList({messages, onPressMessage}) {
 
-	const keyExtractor = item => {
-		console.log(item)
-		item.id.toString()
-	}
+	const keyExtractor = ({id}) => (id.toString())
 
 	const renderItem = ({item}) => {
 		return (
-			<View key={item.id} style={styles.messageRow}>
+			<View style={styles.messageRow}>
 				<TouchableOpacity onPress={()=> onPressMessage(item)}>
 					{renderMessageBody(item)}
 				</TouchableOpacity>
@@ -33,7 +30,7 @@ export default function MessageList({messages, onPressMessage}) {
 				break
 
 			case 'image':
-				return <Image style={styles.image} source={uri}/>
+				return <Image style={styles.image} source={{uri}}/>
 				break
 
 			case 'location':

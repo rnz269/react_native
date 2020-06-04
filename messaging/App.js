@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert, TouchableHighlight, Image } from 'react-native';
 
 import Status from './components/Status'
 import MessageList from './components/MessageList'
@@ -18,7 +18,45 @@ export default function App() {
       })
     ])
 
-  const handlePressMessage = () => {}
+  // keep track of which image is pressed
+  // if image is pressed: a) if state is 0, then we'll set to id
+  // b) if state is nonzero, then we'll set to 0
+  const [fullScreenImageId, setFullScreenImageId] = useState(null)
+  const dismissFullScreenImage = () => {
+    setFullScreenImageId(null)
+  }
+
+  const handlePressMessage = ({id, type}) => {
+    switch (type) {
+      case 'text':
+        Alert.alert(
+          'Delete message?',
+          'Are you sure you want to permanently delete this message?',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Delete',
+              style: 'destructive',
+              onPress: () => {
+                const newMessages = messages.filter(message => message.id !== id)
+                setMessages(newMessages)
+              }
+            }
+          ],
+        )
+        break
+
+      case 'image':
+        setFullScreenImageId(id)
+
+        default:
+        break
+    }
+
+  }
 
   const renderMessageList = () => {
     return (
@@ -40,6 +78,18 @@ export default function App() {
       )
   }
 
+  const renderFullScreenImage = () => {
+    if (fullScreenImageId) {
+        const imageSelected = messages.find(message => message.id === fullScreenImageId)
+        
+      return (
+        <TouchableHighlight onPress={dismissFullScreenImage} style={styles.fullscreenOverlay}>
+          <Image style={styles.fullscreenImage} source={{uri: imageSelected.uri}}/>
+        </TouchableHighlight>
+      )
+    }
+  }
+
 
   return (
     <View style={styles.container}>
@@ -47,6 +97,7 @@ export default function App() {
       {renderMessageList()}
       {renderInputMethodEditor()}
       {renderToolbar()}
+      {renderFullScreenImage()}
     </View>
   );
 }
@@ -69,4 +120,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  fullscreenOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'black',
+    zIndex: 2,
+  },
+  fullscreenImage: {
+    flex: 1,
+    resizeMode: 'contain',
+  }
 });

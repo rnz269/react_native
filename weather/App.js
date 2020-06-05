@@ -35,6 +35,7 @@ export default function App() {
 // useEffect hook can't have async callback: useEffect(async()=>{},[])
 // therefore, must define an async function within and then call it. Done below:
   useEffect(()=> {
+    // updated 6.5.20: alternatively, could call tapAPI here and define async TapAPI outside of useEffect
     // define async function
       async function tapAPI() {
         if (loading) {

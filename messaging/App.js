@@ -4,6 +4,7 @@ import { StyleSheet, View, Alert, TouchableHighlight, Image, BackHandler } from 
 import Status from './components/Status'
 import MessageList from './components/MessageList'
 import Toolbar from './components/Toolbar'
+import ImageGrid from './components/ImageGrid'
 import { createTextMessage, createImageMessage, createLocationMessage } from './utils/MessageUtils'
 
 export default function App() {
@@ -118,7 +119,9 @@ export default function App() {
 
   const renderInputMethodEditor = ()=> {
     return (
-      <View style={styles.inputMethodEditor}></View>
+      <View style={styles.inputMethodEditor}>
+        <ImageGrid />
+      </View>
       )
   }
 

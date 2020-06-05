@@ -2,7 +2,7 @@ import React from 'react'
 import { Dimensions, PixelRatio, FlatList, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 
-export default function Grid({renderItem, numColumns, itemMargin}) {
+export default function Grid({data, keyExtractor, renderItem, numColumns, itemMargin}) {
 	
 	// used to customize the style of each item rendered, depending on its location in photo grid
 	const renderGridItem = (info) => {
@@ -25,8 +25,10 @@ export default function Grid({renderItem, numColumns, itemMargin}) {
 
 	return (
 		<FlatList 
-			{...props}
-			renderItem = {renderGridItem}
+			data={data}
+			keyExtractor={keyExtractor}
+			renderItem={renderGridItem}
+			numColumns={numColumns}
 		/>
 	)
 }

@@ -2,10 +2,11 @@ import React from 'react'
 import { Dimensions, PixelRatio, FlatList, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 
-export default function Grid({data, keyExtractor, renderItem, numColumns, itemMargin}) {
+export default function Grid(props) {
 	
 	// used to customize the style of each item rendered, depending on its location in photo grid
 	const renderGridItem = (info) => {
+		const {renderItem, numColumns, itemMargin} = props
 		const {width} = Dimensions.get('window')
 		const {index} = info
 		// PixelRatio used below to assign an integer value to align to the device's physical pixels
@@ -24,11 +25,9 @@ export default function Grid({data, keyExtractor, renderItem, numColumns, itemMa
 	}
 
 	return (
-		<FlatList 
-			data={data}
-			keyExtractor={keyExtractor}
+		<FlatList
+			{...props}
 			renderItem={renderGridItem}
-			numColumns={numColumns}
 		/>
 	)
 }

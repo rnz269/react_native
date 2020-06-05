@@ -11,13 +11,6 @@ export default function App() {
 
   // initialize state with some data
   const [messages, setMessages] = useState([
-    createImageMessage('https://unsplash.it/300/300'),
-    createTextMessage('World'),
-    createTextMessage('Hello'),
-    createLocationMessage({
-      latitude: 37.78825,
-      longitude: -122.4324,
-      })
     ])
 
   // keep track of which image is pressed
@@ -91,6 +84,15 @@ export default function App() {
     })
   }
 
+  const sendImage = image => {
+    setMessages(prevMessages => {
+      // store new message first in order to render at bottom
+      const newMessages = [createImageMessage(image), ...prevMessages]
+      return newMessages
+    })
+  }
+
+
   const handleChangeFocus = (focus) => {
     setIsFocused(focus)
   }
@@ -104,7 +106,10 @@ export default function App() {
     // the navigator api below takes a cb function param, 
     // called w/ coordinates object: position
     navigator.geolocation.getCurrentPosition((position)=> {
-      setMessages([createLocationMessage(position.coords), ...messages])
+      setMessages(prevMessages => {
+        const newMessages = [createLocationMessage(position.coords), ...prevMessages]
+        return newMessages
+      })
     })
   }
 
@@ -120,7 +125,7 @@ export default function App() {
   const renderInputMethodEditor = ()=> {
     return (
       <View style={styles.inputMethodEditor}>
-        <ImageGrid />
+        <ImageGrid onPressImage={sendImage}/>
       </View>
       )
   }

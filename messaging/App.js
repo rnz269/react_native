@@ -10,8 +10,7 @@ import { createTextMessage, createImageMessage, createLocationMessage } from './
 export default function App() {
 
   // initialize state with some data
-  const [messages, setMessages] = useState([
-    ])
+  const [messages, setMessages] = useState([])
 
   // keep track of which image is pressed
   const [fullScreenImageId, setFullScreenImageId] = useState(null)
@@ -27,8 +26,8 @@ export default function App() {
   }, [])
 
 
-
-  // EVENT HANDLER FUNCTIONS
+  /******************** EVENT HANDLER FUNCTIONS ********************/
+  // on tap of existing message
   const handlePressMessage = ({id, type}) => {
     switch (type) {
       case 'text':
@@ -58,9 +57,9 @@ export default function App() {
         default:
         break
     }
-
   }
 
+  // fullScreenImage back to text
   const dismissFullScreenImage = () => {
     setFullScreenImageId(null)
   }
@@ -76,6 +75,7 @@ export default function App() {
     return false
   }
 
+  // type text and hit return
   const sendText = text => {
     setMessages(prevMessages => {
       // store new message first in order to render at bottom
@@ -84,6 +84,7 @@ export default function App() {
     })
   }
 
+  // select an image in input editor to send
   const sendImage = image => {
     setMessages(prevMessages => {
       // store new message first in order to render at bottom
@@ -92,15 +93,7 @@ export default function App() {
     })
   }
 
-
-  const handleChangeFocus = (focus) => {
-    setIsFocused(focus)
-  }
-
-  const handlePressToolbarCamera = () => {
-    setIsFocused(false)
-  }
-
+  // send location
   const handlePressToolbarLocation = () => {
     setIsFocused(false)
     // the navigator api below takes a cb function param, 
@@ -113,7 +106,17 @@ export default function App() {
     })
   }
 
-  // RENDER SECTION FUNCTIONS
+    // handles keyboard appear/disappear
+  const handleChangeFocus = (focus) => {
+    setIsFocused(focus)
+  }
+
+  const handlePressToolbarCamera = () => {
+    setIsFocused(false)
+  }
+
+
+  /******************** Render Section Functions ********************/
   const renderMessageList = () => {
     return (
       <View style={styles.content}>
@@ -146,7 +149,6 @@ export default function App() {
   const renderFullScreenImage = () => {
     if (fullScreenImageId) {
         const imageSelected = messages.find(message => message.id === fullScreenImageId)
-
       return (
         <TouchableHighlight onPress={dismissFullScreenImage} style={styles.fullscreenOverlay}>
           <Image style={styles.fullscreenImage} source={{uri: imageSelected.uri}}/>
@@ -155,7 +157,7 @@ export default function App() {
     }
   }
 
-
+/******************** Component Return ********************/
   return (
     <View style={styles.container}>
       <Status />
@@ -166,6 +168,8 @@ export default function App() {
     </View>
   );
 }
+
+/******************** Styles & Documentation  ********************/
 
 const styles = StyleSheet.create({
   container: {

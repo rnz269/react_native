@@ -56,13 +56,14 @@ export default function App() {
     })
   }
 
+  // once commentsForItem has been updated (in state), update our asyncStorage
   useEffect(()=> {
     async function saveData() {
     // write new state object to asyncStorage
     try {
       await AsyncStorage.setItem(ASYNC_STORAGE_COMMENTS_KEY, JSON.stringify(commentsForItem))
     } catch(e) {
-      console.log('Failed to save comment for', selectedItemId)
+      console.log('Failed to save comment for item id: ', selectedItemId)
       }
     }
     saveData()

@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
-import { StyleSheet, View, Alert, TouchableHighlight, Image } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, View, Alert, TouchableHighlight, Image, BackHandler } from 'react-native';
 
 import Status from './components/Status'
 import MessageList from './components/MessageList'
+import Toolbar from './components/Toolbar'
 import { createTextMessage, createImageMessage, createLocationMessage } from './utils/MessageUtils'
 
 export default function App() {
@@ -19,13 +20,21 @@ export default function App() {
     ])
 
   // keep track of which image is pressed
-  // if image is pressed: a) if state is 0, then we'll set to id
-  // b) if state is nonzero, then we'll set to 0
   const [fullScreenImageId, setFullScreenImageId] = useState(null)
-  const dismissFullScreenImage = () => {
-    setFullScreenImageId(null)
-  }
 
+  // keep track of whether Toolbar textInput is in focus
+  const [isFocused, setIsFocused] = useState(false)
+
+  // ON COMPONENT MOUNT
+  useEffect(()=> {
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    // remove listener at unmount
+    return ()=> {BackHandler.removeEventListener('hardwareBackPress', handleBackPress)}
+  }, [])
+
+
+
+  // EVENT HANDLER FUNCTIONS
   const handlePressMessage = ({id, type}) => {
     switch (type) {
       case 'text':
@@ -51,13 +60,54 @@ export default function App() {
 
       case 'image':
         setFullScreenImageId(id)
-
+        setIsFocused(false)
         default:
         break
     }
 
   }
 
+  const dismissFullScreenImage = () => {
+    setFullScreenImageId(null)
+  }
+
+  // for Android's hardware back button
+  // we return true so we don't exit the app. 
+  // false exits the app, which we want to do if not in a full screen image
+  const handleBackPress = () => {
+    if (fullScreenImageId) {
+      setFullScreenImageId(null)
+      return true
+    }
+    return false
+  }
+
+  const sendText = text => {
+    setMessages(prevMessages => {
+      // store new message first in order to render at bottom
+      const newMessages = [createTextMessage(text), ...prevMessages]
+      return newMessages
+    })
+  }
+
+  const handleChangeFocus = (focus) => {
+    setIsFocused(focus)
+  }
+
+  const handlePressToolbarCamera = () => {
+    setIsFocused(false)
+  }
+
+  const handlePressToolbarLocation = () => {
+    setIsFocused(false)
+    // the navigator api below takes a cb function param, 
+    // called w/ coordinates object: position
+    navigator.geolocation.getCurrentPosition((position)=> {
+      setMessages([createLocationMessage(position.coords), ...messages])
+    })
+  }
+
+  // RENDER SECTION FUNCTIONS
   const renderMessageList = () => {
     return (
       <View style={styles.content}>
@@ -74,14 +124,21 @@ export default function App() {
 
   const renderToolbar = ()=> {
     return (
-      <View style={styles.toolbar}></View>
+      <View style={styles.toolbar}>
+        <Toolbar 
+          isFocused={isFocused} 
+          onSubmit={sendText} 
+          onChangeFocus={handleChangeFocus} 
+          onPressCamera={handlePressToolbarCamera} 
+          onPressLocation={handlePressToolbarLocation}/>
+      </View>
       )
   }
 
   const renderFullScreenImage = () => {
     if (fullScreenImageId) {
         const imageSelected = messages.find(message => message.id === fullScreenImageId)
-        
+
       return (
         <TouchableHighlight onPress={dismissFullScreenImage} style={styles.fullscreenOverlay}>
           <Image style={styles.fullscreenImage} source={{uri: imageSelected.uri}}/>
@@ -95,8 +152,8 @@ export default function App() {
     <View style={styles.container}>
       <Status />
       {renderMessageList()}
-      {renderInputMethodEditor()}
       {renderToolbar()}
+      {renderInputMethodEditor()}
       {renderFullScreenImage()}
     </View>
   );

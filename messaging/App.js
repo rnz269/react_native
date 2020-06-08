@@ -5,18 +5,40 @@ import Status from './components/Status'
 import MessageList from './components/MessageList'
 import Toolbar from './components/Toolbar'
 import ImageGrid from './components/ImageGrid'
+
+import MeasureLayout from './components/MeasureLayout'
+import KeyboardState from './components/KeyboardState'
+import MessagingContainer, {
+  INPUT_METHOD,
+} from './components/MessagingContainer'
+
 import { createTextMessage, createImageMessage, createLocationMessage } from './utils/MessageUtils'
 
 export default function App() {
 
   // initialize state with some data
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([ 
+      createImageMessage('https://unsplash.it/300/300'),
+      createTextMessage('World'),
+      createTextMessage('Hello'),
+      createLocationMessage({
+        latitude: 37.78825,
+        longitude: -122.4324,
+      }),
+    ])
 
   // keep track of which image is pressed
   const [fullScreenImageId, setFullScreenImageId] = useState(null)
 
   // keep track of whether Toolbar textInput is in focus
   const [isFocused, setIsFocused] = useState(false)
+
+  // keep track of inputMethod
+  const [inputMethod, setInputMethod] = useState(INPUT_METHOD.NONE)
+
+  handleChangeInputMethod = (inputMethod) => {
+    setInputMethod(inputMethod)
+  }
 
   // ON COMPONENT MOUNT
   useEffect(()=> {
@@ -113,6 +135,7 @@ export default function App() {
 
   const handlePressToolbarCamera = () => {
     setIsFocused(false)
+    setInputMethod(INPUT_METHOD.CUSTOM)
   }
 
 
@@ -161,12 +184,26 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Status />
-      {renderMessageList()}
-      {renderToolbar()}
-      {renderInputMethodEditor()}
+      <MeasureLayout>
+        {layout => (
+          <KeyboardState layout={layout}>
+            {keyboardInfo => (
+              <MessagingContainer
+                {...keyboardInfo}
+                inputMethod = {inputMethod}
+                onChangeInputMethod = {handleChangeInputMethod}
+                renderInputMethodEditor = {renderInputMethodEditor}
+              >
+                {renderMessageList()}
+                {renderToolbar()}
+              </MessagingContainer>
+            )}
+          </KeyboardState>
+        )}
+     </MeasureLayout>
       {renderFullScreenImage()}
     </View>
-  );
+  )
 }
 
 /******************** Styles & Documentation  ********************/

@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import {SafeAreaView, BackHandler, LayoutAnimation, Platform, UIManager, View} from 'react-native'
+import {isIphoneX} from 'react-native-iphone-x-helper'
 import PropTypes from 'prop-types'
 
 export const INPUT_METHOD = {
@@ -55,12 +56,19 @@ export default function MessagingContainer({containerHeight, contentHeight, keyb
 	const containerStyle = {
 		height: useContentHeight ? contentHeight : containerHeight
 	}
-	
+
 	// Determining inner container's height
 	// if IM is custom AND keyboard isn't appearing, we'll use keyboardHeight
 	const showCustomInput = inputMethod === INPUT_METHOD.CUSTOM && !keyboardWillShow
+	// the keyboard is hidden and not transitioning up
+	const keyboardIsHidden = inputMethod === INPUT_METHOD.NONE && !keyboardWillShow
+	// the keyboard is visible and transitioning down
+	const keyboardIsHiding = inputMethod === INPUT_METHOD.KEYBOARD && !keyboardWillHide
+
 	const inputStyle = {
-		height: showCustomInput ? keyboardHeight || 250 : 0
+		height: showCustomInput ? keyboardHeight || 250 : 0,
+		// show extra space if device is iPhone X & keyboard not visible
+		marginTop: isIphoneX() && (keyboardIsHidden || keyboardIsHiding) ? 24 : 0
 	}
 
 	return (

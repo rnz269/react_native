@@ -3,8 +3,10 @@ import {Keyboard, Platform} from 'react-native'
 import PropTypes from 'prop-types'
 const INITIAL_ANIMATION_DURATION = 250
 
+// component keeps track of current keyboard visibility & height
 export default function KeyboardState({layout, children}) {
 // want to define keyboardInfo here to call children(keyboardInfo)
+// content height is a function of keyboard height, layout.y
 	const [contentHeight, setContentHeight] = useState(layout.height)
 	const [keyboardHeight, setKeyboardHeight] = useState(0)
 	const [keyboardVisible, setKeyboardVisible] = useState(false)

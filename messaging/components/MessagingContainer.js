@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {SafeAreaView, BackHandler, LayoutAnimation, Platform, UIManager, View} from 'react-native'
+import {BackHandler, LayoutAnimation, Platform, UIManager, View} from 'react-native'
 import {isIphoneX} from 'react-native-iphone-x-helper'
 import PropTypes from 'prop-types'
 
@@ -52,24 +52,30 @@ export default function MessagingContainer({containerHeight, contentHeight, keyb
 
 	// Determining outer container's height
 	// if IM is keyboard OR keyboard is appearing, we'll use contentHeight
+	// if IM isn't keyboard AND isn't appearing, we use containerHeight
 	const useContentHeight = inputMethod === INPUT_METHOD.KEYBOARD || keyboardWillShow
 	const containerStyle = {
 		height: useContentHeight ? contentHeight : containerHeight
 	}
 
-	// Determining inner container's height
-	// if IM is custom AND keyboard isn't appearing, we'll use keyboardHeight
+	// Determining inner container's height (inputMethodEditor's height)
+	// if IM is custom AND keyboard isn't appearing, we'll use keyboardHeight. Else, we don't want to show IME => height =0
 	const showCustomInput = inputMethod === INPUT_METHOD.CUSTOM && !keyboardWillShow
-	// the keyboard is hidden and not transitioning up
+
+	// Determining inner container's marginTop. If either of following are true, we want marginTop of 24. Else, 0.
+	// the keyboard is hidden and not transitioning up -> we want it to be 24 above bottom
 	const keyboardIsHidden = inputMethod === INPUT_METHOD.NONE && !keyboardWillShow
-	// the keyboard is visible and transitioning down
-	const keyboardIsHiding = inputMethod === INPUT_METHOD.KEYBOARD && !keyboardWillHide
+	// the keyboard is visible and transitioning down -> we want it to stop 24 above bottom
+	const keyboardIsHiding = inputMethod === INPUT_METHOD.KEYBOARD && keyboardWillHide
 
 	const inputStyle = {
 		height: showCustomInput ? keyboardHeight || 250 : 0,
-		// show extra space if device is iPhone X & keyboard not visible
+		// show extra space at bottom if device is iPhone X & keyboard not visible
+		// computed above, keyboardIsHidden & keyboardIsHiding
 		marginTop: isIphoneX() && (keyboardIsHidden || keyboardIsHiding) ? 24 : 0
 	}
+
+
 
 	return (
 		<View style={containerStyle}>

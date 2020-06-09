@@ -3,6 +3,9 @@ import {View, StyleSheet, Platform} from 'react-native'
 import PropTypes from 'prop-types'
 import Constants from 'expo-constants'
 
+// Want to measure anything below our status bar (everything, in case of ios)
+// Use this 'availableSpace' to transition btw height when keyboard is visible vs. not visible
+// need to do this since keyboard doesn't take up space on our ui, so don't want to display underneath it
 export default function MeasureLayout({children}) {
 	// want to define layout here to call children(layout)
 	// can measure view dimensions with onLayout prop, store in state
@@ -11,7 +14,6 @@ export default function MeasureLayout({children}) {
 
 	const handleLayout = event => {
 		const {nativeEvent: {layout}} = event
-
 		const newLayout = {...layout}
 		newLayout.y = newLayout.y + (Platform.OS === 'android' ? Constants.statusBarHeight : 0)
 		setLayout(newLayout)

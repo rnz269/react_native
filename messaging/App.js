@@ -156,7 +156,7 @@ export default function App() {
       )
   }
 
-  const renderToolbar = ()=> {
+  const renderToolbar = () => {
     return (
       <View style={styles.toolbar}>
         <Toolbar 

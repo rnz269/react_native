@@ -4,7 +4,7 @@ import {StyleSheet, Text, View, FlatList, ActivityIndicator} from 'react-native'
 import ContactListItem from '../components/ContactListItem'
 import {fetchContacts} from '../utils/api'
 
-export default function Contacts() {
+export default function Contacts({navigation: {navigate}}) {
 	// fetchContacts returns an array of objects
 	// each object is a contact w/ props:
 	// id, name, avatar, phone, cell, email, favorite 
@@ -44,7 +44,7 @@ export default function Contacts() {
 				name={item.name}
 				avatar={item.avatar}
 				phone={item.phone}
-				onPress={()=>{}}
+				onPress={()=> navigate('Profile')}
 			/>
 		)
 	}

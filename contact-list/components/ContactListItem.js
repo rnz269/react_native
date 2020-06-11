@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   contactInfo: {
     flex: 1,
     flexDirection: 'row',
-
+    alignItems: 'center',
     paddingTop: 16,
     paddingBottom: 16,
     paddingRight: 24,

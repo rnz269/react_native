@@ -1,18 +1,9 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Contacts from './screens/Contacts'
+import React from 'react'
+
+import AppContainer from './routes'
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Contacts />
-    </View>
-  );
+  return <AppContainer />
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});

@@ -7,51 +7,50 @@ import DetailListItem from '../components/DetailListItem'
 import { fetchRandomContact } from '../utils/api'
 import colors from '../utils/colors'
 
-export default function Profile() {
+export default function Profile({navigation: {state: {params}}}) {
 
-	const [contact, setContact] = useState()
-
-	useEffect(()=> {
-		async function fetchContact () {
-			const person = await fetchRandomContact()
-			console.log(person)
-			setContact(person)
-		}
-		fetchContact()
-	}, [])
-
-	if (!contact) {
-		return (<View></View>)
-	}
+	// navigation prop provided by HOC. Contains navigate, state, setParams, goBack
+	// destructure state to get params object, which contains one param: contacts.
+	const {contact} = params
+	const {name, phone, avatar, email, cell} = contact
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.avatarSection}>
 				<ContactThumbnail
-					name={contact.name}
-					phone={contact.phone}
-					avatar={contact.avatar}
+					name={name}
+					phone={phone}
+					avatar={avatar}
 				/>
 			</View>
 			<View style={styles.detailsSection}>
 				<DetailListItem
 					icon="mail"
 					title="email"
-					subtitle={contact.email}
+					subtitle={email}
 				/>
 				<DetailListItem
 					icon="phone"
 					title="Work"
-					subtitle={contact.phone}
+					subtitle={phone}
 				/>
 				<DetailListItem
 					icon="smartphone"
 					title="Personal"
-					subtitle={contact.cell}
+					subtitle={cell}
 				/>
 			</View>
 		</View>
 	)
+}
+
+Profile.navigationOptions = ({navigation: {state: {params}}}) => {
+	const {contact: {name}} = params
+	return {
+		title: name.split(' ')[0],
+		headerTintColor: 'white',
+		headerStyle: {backgroundColor: colors.blue}
+	}
 }
 
 const styles = StyleSheet.create({

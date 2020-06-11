@@ -44,7 +44,7 @@ export default function Contacts({navigation: {navigate}}) {
 				name={item.name}
 				avatar={item.avatar}
 				phone={item.phone}
-				onPress={()=> navigate('Profile')}
+				onPress={()=> navigate('Profile', {contact: item})}
 			/>
 		)
 	}
@@ -82,6 +82,11 @@ export default function Contacts({navigation: {navigate}}) {
 
 	
 }
+
+Contacts.navigationOptions = {
+	title: 'Contacts',
+}
+
 
 const styles = StyleSheet.create({
 	container: {

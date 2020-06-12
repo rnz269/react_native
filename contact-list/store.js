@@ -14,6 +14,8 @@ export default {
   },
   setState(newState) {
     state = { ...state, ...newState };
+    // critical line. this is how onChange works. onChange pushes new callback to listener array
+    // then when any component calls store.setState, all of the callbacks in listener are called
     listeners.forEach(listener => listener());
   },
   onChange(newListener) {

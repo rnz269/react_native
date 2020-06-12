@@ -16,7 +16,9 @@ export default function Favorites({navigation: {navigate}}) {
 	const [error, setError] = useState(store.getState().error)
 
 	useEffect(()=> {
-		// define our new change listener. on change of store state, we update local state.
+		// define our new change listener. on change of store state, we update local state
+		// this listener fires everytime store changes, leading us to set local state with
+		// store state. However, if local state doesn't change, Favorites won't be re-rendered
 		const unsubscribe = store.onChange(
 			() => {
 				setContacts(store.getState().contacts)
@@ -38,7 +40,7 @@ export default function Favorites({navigation: {navigate}}) {
 			fetchContacts()
 		}
 		// return cleanup function
-		return unsubscribe
+		return ()=> unsubscribe ()
 	}, [])
 
 	const keyExtractor = ({id}) => id.toString()
@@ -47,11 +49,12 @@ export default function Favorites({navigation: {navigate}}) {
 		return (
 			<ContactThumbnail
 				avatar={avatar}
-				onPress={() => {navigate('Profile', {contact: item})}}
+				onPress={() => {navigate('Profile', {id: item.id})}}
 			/>
 		)
 	}
 
+	// assemble our favorites array
 	const favorites = contacts.filter(contact => contact.favorite)
 	// sort our data array
 	const favoritesSorted = favorites.sort((a,b)=> (

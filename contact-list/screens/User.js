@@ -31,7 +31,7 @@ export default function User() {
 		// call async function
 		getUserContact()
 
-		return unsubscribe
+		return () => unsubscribe()
 	}, [])
 
 	if (loading) {

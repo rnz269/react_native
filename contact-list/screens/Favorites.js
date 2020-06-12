@@ -4,31 +4,41 @@ import {StyleSheet, Text, View, FlatList, ActivityIndicator} from 'react-native'
 import ContactThumbnail from '../components/ContactThumbnail'
 
 import {fetchContacts} from '../utils/api'
+import store from '../store'
 
 // Favorites not a child of Contacts, so no way to pass data prop
 // Also, since this will be a different tab, no access to navigation prop
 // therefore, we must re-call API
 export default function Favorites({navigation: {navigate}}) {
 
-	const [contacts, setContacts] = useState([])
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(false)
+	const [contacts, setContacts] = useState(store.getState().contacts)
+	const [loading, setLoading] = useState(store.getState().isFetchingContacts)
+	const [error, setError] = useState(store.getState().error)
 
 	useEffect(()=> {
-		// define async function
-		async function fetchFavorites() {
-			try {
-				const data = await fetchContacts()
-				const favorites = data.filter(contact => contact.favorite)
-				setContacts(favorites)
-				setLoading(false)
-			} catch (e) {
-				setError(true)
-				setLoading(false)
+		// define our new change listener. on change of store state, we update local state.
+		const unsubscribe = store.onChange(
+			() => {
+				setContacts(store.getState().contacts)
+				setLoading(store.getState().isFetchingContacts)
+				setError(store.getState().error)
 			}
+		)
+
+		// define async function
+		async function fetchContacts() {
+				const fetchedContacts = await fetchContacts()
+				store.setState({
+					contacts: fetchedContacts,
+					isFetchingContacts: false,
+				})
 		}
-		// call async function
-		fetchFavorites()
+		// call async function if needed
+		if (contacts.length === 0) {
+			fetchContacts()
+		}
+		// return cleanup function
+		return unsubscribe
 	}, [])
 
 	const keyExtractor = ({id}) => id.toString()
@@ -42,8 +52,9 @@ export default function Favorites({navigation: {navigate}}) {
 		)
 	}
 
+	const favorites = contacts.filter(contact => contact.favorite)
 	// sort our data array
-	const contactsSorted = contacts.sort((a,b)=> (
+	const favoritesSorted = favorites.sort((a,b)=> (
 		a.name.localeCompare(b.name)
 	))
 
@@ -71,7 +82,7 @@ export default function Favorites({navigation: {navigate}}) {
 			<FlatList
 				keyExtractor={keyExtractor}
 				renderItem={renderItem}
-				data={contactsSorted}
+				data={favoritesSorted}
 				numColumns={3}
 				contentContainerStyle={styles.list}
 			/>

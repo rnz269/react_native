@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, FlatList, ActivityIndicator} from 'react-native'
 
 import ContactListItem from '../components/ContactListItem'
 import {fetchContacts} from '../utils/api'
+import store from '../store'
 
 export default function Contacts({navigation: {navigate}}) {
 	// fetchContacts returns an array of objects
@@ -12,28 +13,33 @@ export default function Contacts({navigation: {navigate}}) {
 	// we perform mapping using FlatList
 
 	// setup state to capture ContactListItem data array
-	const [data, setData] = useState([])
-	const [loading, setLoading] = useState(true) 
-	const [error, setError] = useState(false)
+	const [contacts, setContacts] = useState(store.getState().contacts)
+	const [loading, setLoading] = useState(store.getState().isFetchingContacts) 
+	const [error, setError] = useState(store.getState().error)
 
 	// on component mount
 	useEffect(()=> {
+		// define our new change listener. on change of store state, we update local state.
+		const unsubscribe = store.onChange(
+			() => {
+				setContacts(store.getState().contacts)
+				setLoading(store.getState().isFetchingContacts)
+				setError(store.getState().error)
+			}
+		)
+		
 		async function fetchData() {
-			try {
-				const data = await fetchContacts()
-				setData(data)
-				setLoading(false)
-			}
-			catch (e) {
-				setError(true)
-				setLoading(false)
-			}
+			const contacts = await fetchContacts()
+			store.setState({ contacts, isFetchingContacts: false })
 		}
+		// call async function
 		fetchData()
+		// return cleanup function
+		return unsubscribe
 	}, [])
 
 	// sort data alphabetically
-	const dataSorted = data.sort((a,b) => (
+	const contactsSorted = contacts.sort((a,b) => (
 		a.name.localeCompare(b.name)
 	))
 
@@ -73,7 +79,7 @@ export default function Contacts({navigation: {navigate}}) {
 	return (
 		<View style={styles.container}>
 			<FlatList
-				data={dataSorted}
+				data={contactsSorted}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 			/>

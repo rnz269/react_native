@@ -6,25 +6,32 @@ import ContactThumbnail from '../components/ContactThumbnail'
 
 import {fetchUserContact} from '../utils/api'
 import colors from '../utils/colors'
+import store from '../store'
 
 export default function User() {
 
-	const [user, setUser] = useState()
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(false)
+	const [user, setUser] = useState(store.getState().user)
+	const [loading, setLoading] = useState(store.getState().isFetchingUser)
+	const [error, setError] = useState(store.getState().error)
 
 	useEffect(()=> {
-		async function getUserContact() {
-			try {
-				const userLoggedIn = await fetchUserContact()
-				setUser(userLoggedIn)
-				setLoading(false)
-			} catch (e) {
-				setError(true)
-				setLoading(false)
+		// setup onChange listener
+		const unsubscribe = store.onChange(
+			() => {
+				setUser(store.getState().user)
+				setLoading(store.getState().isFetchingUser)
+				setError(store.getState().error)
 			}
+		)
+
+		async function getUserContact() {
+			const userLoggedIn = await fetchUserContact()
+			store.setState({user: userLoggedIn, isFetchingUser: false})
 		}
+		// call async function
 		getUserContact()
+
+		return unsubscribe
 	}, [])
 
 	if (loading) {

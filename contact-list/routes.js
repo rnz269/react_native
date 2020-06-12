@@ -10,6 +10,7 @@ import Contacts from './screens/Contacts'
 import Favorites from './screens/Favorites'
 import Profile from './screens/Profile'
 import User from './screens/User'
+import Options from './screens/Options'
 
 
 function getTabBarIcon(icon) {
@@ -54,8 +55,11 @@ const FavoritesScreen = createStackNavigator(
 const UserScreen = createStackNavigator(
 	{
 		User,
+		Options,
 	},
+	// specify this StackNavigator should have modal transitions
 	{
+		mode: 'modal',
 		initialRouteName: 'User',
 		navigationOptions: {
 			tabBarIcon: getTabBarIcon('person')

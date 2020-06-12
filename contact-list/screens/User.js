@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {StyleSheet, ActivityIndicator, View, Text} from 'react-native'
+import {MaterialIcons} from '@expo/vector-icons'
 
 import ContactThumbnail from '../components/ContactThumbnail'
 
@@ -54,11 +55,20 @@ export default function User() {
 
 }
 
-User.navigationOptions = {
+User.navigationOptions = ({navigation: {navigate}}) => ({
 	title: 'Me',
 	headerStyle: {backgroundColor: colors.blue},
 	headerTintColor: 'white',
-}
+	headerRight: (
+		<MaterialIcons
+			name="settings"
+			size={24}
+			style={{color: "white", marginRight: 10}}
+			onPress={() => navigate('Options')}
+		/>
+	)
+})
+
 
 const styles = StyleSheet.create({
 	container: {

@@ -2,11 +2,13 @@ import React, {useState, useEffect} from 'react'
 import {StyleSheet, Text, View, FlatList, ActivityIndicator, Linking} from 'react-native'
 
 import ContactListItem from '../components/ContactListItem'
-import {fetchContacts} from '../utils/api'
 import getURLParams from '../utils/getURLParams'
-import store from '../store'
+// import connect from redux
+import {connect} from 'react-redux'
+// import action creators
+import {fetchContactsData} from '../redux'
 
-export default function Contacts({navigation: {navigate}}) {
+function Contacts({navigation: {navigate}}) {
 	// fetchContacts returns an array of objects
 	// each object is a contact w/ props:
 	// id, name, avatar, phone, cell, email, favorite 
@@ -122,7 +124,6 @@ export default function Contacts({navigation: {navigate}}) {
 		</View>
 	)
 
-	
 }
 
 Contacts.navigationOptions = {
@@ -140,3 +141,18 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	}
 })
+
+// grab state from redux store
+function mapStateToProps(state) {
+	return {
+		contacts: state.contacts,
+		loading: state.isFetchingContacts,
+		error: state.error,
+	}
+}
+
+const mapDispatchToProps = {
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts)

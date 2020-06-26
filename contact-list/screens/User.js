@@ -3,41 +3,23 @@ import {StyleSheet, ActivityIndicator, View, Text} from 'react-native'
 import {MaterialIcons} from '@expo/vector-icons'
 
 import ContactThumbnail from '../components/ContactThumbnail'
+// import connect from redux
+import {connect} from 'react-redux'
 
-import {fetchUserContact} from '../utils/api'
+import { fetchUserData } from '../redux/userContact'
 import colors from '../utils/colors'
-import store from '../store'
 
-export default function User() {
-
-	const [user, setUser] = useState(store.getState().user)
-	const [loading, setLoading] = useState(store.getState().isFetchingUser)
-	const [error, setError] = useState(store.getState().error)
+function User({dispatch, user: {isLoading, data, error}}) {
 
 	useEffect(()=> {
-		// setup onChange listener
-		const unsubscribe = store.onChange(
-			() => {
-				setUser(store.getState().user)
-				setLoading(store.getState().isFetchingUser)
-				setError(store.getState().error)
-			}
-		)
-
-		async function getUserContact() {
-			const userLoggedIn = await fetchUserContact()
-			store.setState({user: userLoggedIn, isFetchingUser: false})
-		}
-		// call async function
-		getUserContact()
-
-		return () => unsubscribe()
+		// send action to store to fetch data
+		dispatch(fetchUserData())
 	}, [])
 
-	if (loading) {
+	if (isLoading) {
 		return (
 			<View style={styles.container}>
-				<ActivityIndicator size={'large'} animating={loading} />
+				<ActivityIndicator size={'large'} animating={isLoading} />
 			</View>
 		)
 	}
@@ -53,13 +35,12 @@ export default function User() {
 	return (
 		<View style={styles.container}>
 			<ContactThumbnail
-				name={user.name}
-				phone={user.phone}
-				avatar={user.avatar}
+				name={data.name}
+				phone={data.phone}
+				avatar={data.avatar}
 			 />
 		</View>
 	)
-
 }
 
 User.navigationOptions = ({navigation: {navigate}}) => ({
@@ -76,7 +57,6 @@ User.navigationOptions = ({navigation: {navigate}}) => ({
 	)
 })
 
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -88,3 +68,10 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	}
 })
+
+// get state from redux store
+const mapStateToProps = (globalState) => ({
+	user: globalState.user
+})
+
+export default connect(mapStateToProps)(User)

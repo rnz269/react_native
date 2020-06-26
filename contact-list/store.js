@@ -1,6 +1,6 @@
 let state = {
-  isFetchingContacts: true,
-  isFetchingUser: true,
+  isFetchingContacts: false,
+  isFetchingUser: false,
   contacts: [],
   user: {},
   error: false,

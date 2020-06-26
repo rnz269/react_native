@@ -1,36 +1,30 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect} from 'react'
 import {View, Text, StyleSheet} from 'react-native'
 
 import ContactThumbnail from '../components/ContactThumbnail'
 import DetailListItem from '../components/DetailListItem'
-
+// import connect from redux
+import {connect} from 'react-redux'
 import colors from '../utils/colors'
-import store from '../store'
 
-export default function Profile({navigation: {state: {params}}}) {
+function Profile({contacts: {data}, navigation, navigation: {state: {params}}}) {
 
-	// only relevant state in store is contacts
-	// whenever local state is changed, component rerenders
-	// below, where we extract user from incoming id, incoming id will stay same,
-	// but the user object could theoretically change. benefit of using id 
-	// id -> we'll pull updated contact here. Before, we received full contact in param
-	// which wouldn't have updated
-	const [contacts, setContacts] = useState(store.getState().contacts)
+	const getContact = () => {
+		const {id} = params
+		const user = data.find(contact => contact.id === id)
+		return user
+	}
 
-	useEffect(()=> {
-		const unsubscribe = store.onChange(
-			() => {
-				setContacts(store.getState().contacts)
-			}
-		)
-		return () => unsubscribe()
-	}, [])
-
+	const [user, setUser] = useState(getContact)
 	// navigation prop provided by HOC. Contains navigate, state, setParams, goBack
 	// destructure state to get params object, which contains one param: id.
 	// we'll use this id to find the relevant contact in store
-	const {id} = params
-	const user = contacts.find(contact => contact.id === id)
+	useLayoutEffect(()=> {
+		navigation.setParams({
+			user: user,
+		})
+	}, [])
+
 	const {name, phone, avatar, email, cell} = user
 
 	return (
@@ -63,16 +57,17 @@ export default function Profile({navigation: {state: {params}}}) {
 	)
 }
 
+
 Profile.navigationOptions = ({navigation: {state: {params}}}) => {
-	const {id} = params
-	const user = store.getState().contacts.find(contact => contact.id === id)
-	const {name} = user
+	const {id, user} = params
+
 	return {
-		title: name.split(' ')[0],
+		title: user ? user.name.split(' ')[0] : '',
 		headerTintColor: 'white',
 		headerStyle: {backgroundColor: colors.blue}
 	}
 }
+
 
 const styles = StyleSheet.create({
 	container: {
@@ -89,3 +84,10 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 	}
 })
+
+// get state from redux store
+const mapStateToProps = (globalState) => ({
+	contacts: globalState.contacts,
+})
+
+export default connect(mapStateToProps, {})(Profile)

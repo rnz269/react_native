@@ -6,7 +6,7 @@ import MessageList from './components/MessageList'
 import Toolbar from './components/Toolbar'
 import ImageGrid from './components/ImageGrid'
 
-import MeasureLayout from './components/MeasureLayout'
+import useComponentSize from './components/useComponentSize'
 import KeyboardState from './components/KeyboardState'
 import MessagingContainer, {
   INPUT_METHOD,
@@ -180,13 +180,15 @@ export default function App() {
     }
   }
 
+  const [layout, onLayout] = useComponentSize()
+  console.log(layout)
+
 /******************** Component Return ********************/
   return (
     <View style={styles.container}>
       <Status />
-      <MeasureLayout>
-        {layout => (
-          <KeyboardState layout={layout}>
+      <View onLayout={onLayout}>
+        <KeyboardState layout={layout}>
             {keyboardInfo => (
               <MessagingContainer
                 {...keyboardInfo}
@@ -198,9 +200,8 @@ export default function App() {
                 {renderToolbar()}
               </MessagingContainer>
             )}
-          </KeyboardState>
-        )}
-     </MeasureLayout>
+        </KeyboardState>
+     </View>
       {renderFullScreenImage()}
     </View>
   )

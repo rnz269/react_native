@@ -14,6 +14,7 @@ export default function MeasureLayout({children}) {
 
 	const handleLayout = event => {
 		const {nativeEvent: {layout}} = event
+		console.log(layout)
 		const newLayout = {...layout}
 		newLayout.y = newLayout.y + (Platform.OS === 'android' ? Constants.statusBarHeight : 0)
 		setLayout(newLayout)

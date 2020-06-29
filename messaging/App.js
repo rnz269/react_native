@@ -187,7 +187,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Status />
-      <View onLayout={onLayout}>
+      <View style={styles.layout} onLayout={onLayout}>
         <KeyboardState layout={layout}>
             {keyboardInfo => (
               <MessagingContainer
@@ -213,6 +213,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  layout: {
+    flex: 1,
   },
   content: {
     flex: 1,

@@ -7,7 +7,9 @@ import Toolbar from './components/Toolbar'
 import ImageGrid from './components/ImageGrid'
 
 import useComponentSize from './components/useComponentSize'
-import KeyboardState from './components/KeyboardState'
+import useKeyboardState from './components/useKeyboardState'
+import useKeyboard from './components/useKeyboard'
+
 import MessagingContainer, {
   INPUT_METHOD,
 } from './components/MessagingContainer'
@@ -27,8 +29,6 @@ export default function App() {
       }),
     ])
 
-  const [sizeLoading, setSizeLoading] = useState(false)
-
   // keep track of which image is pressed
   const [fullScreenImageId, setFullScreenImageId] = useState(null)
 
@@ -38,7 +38,7 @@ export default function App() {
   // keep track of inputMethod
   const [inputMethod, setInputMethod] = useState(INPUT_METHOD.NONE)
 
-  handleChangeInputMethod = (inputMethod) => {
+  const handleChangeInputMethod = (inputMethod) => {
     setInputMethod(inputMethod)
   }
 
@@ -183,11 +183,13 @@ export default function App() {
   }
 
   // call our custom hook
-  const [layout, onLayout] = useComponentSize()
-  console.log(layout)
+  const {layout, onLayout, ...keyboardInfo} = useKeyboard()
   // don't render KeyboardState until we can supply it with a non-null prop
   // if {layout && (...)} is above View w/ onLayout, will never trigger re-render
   // onLayout is what is triggering our re-render
+  console.log('layout: ', layout)
+  //const keyboardInfo = useKeyboardState(layout)
+
 
 /******************** Component Return ********************/
   return (
@@ -195,19 +197,16 @@ export default function App() {
       <Status />
       <View style={styles.layout} onLayout={onLayout}>
       {layout && (
-        <KeyboardState layout={layout}>
-            {keyboardInfo => (
-              <MessagingContainer
-                {...keyboardInfo}
-                inputMethod = {inputMethod}
-                onChangeInputMethod = {handleChangeInputMethod}
-                renderInputMethodEditor = {renderInputMethodEditor}
-              >
-                {renderMessageList()}
-                {renderToolbar()}
-              </MessagingContainer>
-            )}
-        </KeyboardState>
+        <MessagingContainer
+          {...keyboardInfo}
+          containerHeight = {layout.height}
+          inputMethod = {inputMethod}
+          onChangeInputMethod = {handleChangeInputMethod}
+          renderInputMethodEditor = {renderInputMethodEditor}
+        >
+          {renderMessageList()}
+          {renderToolbar()}
+        </MessagingContainer>
       )}
      </View>
       {renderFullScreenImage()}

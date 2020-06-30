@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import {Keyboard, Platform} from 'react-native'
-import PropTypes from 'prop-types'
 const INITIAL_ANIMATION_DURATION = 250
 
 // component keeps track of current keyboard visibility & height
-export default function KeyboardState({layout, children}) {
+const useKeyboardState = (layout) => {
+	// if our layout argument is null, immediately return to avoid exception
+
 // want to define keyboardInfo here to call children(keyboardInfo)
 // content height is a function of keyboard height, layout.y
 	const [contentHeight, setContentHeight] = useState(layout.height)
@@ -13,7 +14,7 @@ export default function KeyboardState({layout, children}) {
 	const [keyboardWillShow, setKeyboardWillShow] = useState(false)
 	const [keyboardWillHide, setKeyboardWillHide] = useState(false)
 	const [keyboardAnimationDuration, setKeyboardAnimationDuration] = useState(INITIAL_ANIMATION_DURATION)
-
+	
 	useEffect(()=> {
 		let subscriptions = []
 		if (Platform.OS === 'ios') {
@@ -65,24 +66,7 @@ export default function KeyboardState({layout, children}) {
 		setKeyboardAnimationDuration(duration)
 	}
 
-
-	return children({
-		containerHeight: layout.height,
-		contentHeight,
-		keyboardHeight,
-		keyboardVisible,
-		keyboardWillShow,
-		keyboardWillHide,
-		keyboardAnimationDuration,
-	})
+	return {containerHeight: layout.height, contentHeight, keyboardHeight, keyboardVisible, keyboardWillShow, keyboardWillHide, keyboardAnimationDuration}
 }
 
-KeyboardState.propTypes = {
-	layout: PropTypes.shape({
-		x: PropTypes.number.isRequired,
-		y: PropTypes.number.isRequired,
-		width: PropTypes.number.isRequired,
-		height: PropTypes.number.isRequired,
-	}).isRequired,
-	children: PropTypes.func.isRequired,
-}
+export default useKeyboardState

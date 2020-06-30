@@ -1,18 +1,35 @@
-import React, {useState, useEffect} from 'react'
-import {Keyboard, Platform} from 'react-native'
-import PropTypes from 'prop-types'
+import {useState, useEffect, useCallback, useRef} from 'react'
+import {View, Platform, Keyboard} from 'react-native'
+import Constants from 'expo-constants'
 const INITIAL_ANIMATION_DURATION = 250
 
-// component keeps track of current keyboard visibility & height
-export default function KeyboardState({layout, children}) {
-// want to define keyboardInfo here to call children(keyboardInfo)
-// content height is a function of keyboard height, layout.y
-	const [contentHeight, setContentHeight] = useState(layout.height)
+// Want to measure anything below our status bar (everything, in case of ios)
+// Use this 'availableSpace' to transition btw height when keyboard is visible vs. not visible
+// need to do this since keyboard doesn't take up space on our ui, so don't want to display underneath it
+// event contains x, y, height, width
+
+const useKeyboard = () => {
+	const [layout, _setLayout] = useState(null)
+	const layoutRef = useRef(layout)
+
+	const setLayout = (value) => {
+		layoutRef.current = value
+		_setLayout(value)
+	}
+	// keyboardState
+	const [contentHeight, setContentHeight] = useState(null)
 	const [keyboardHeight, setKeyboardHeight] = useState(0)
 	const [keyboardVisible, setKeyboardVisible] = useState(false)
 	const [keyboardWillShow, setKeyboardWillShow] = useState(false)
 	const [keyboardWillHide, setKeyboardWillHide] = useState(false)
 	const [keyboardAnimationDuration, setKeyboardAnimationDuration] = useState(INITIAL_ANIMATION_DURATION)
+
+	const onLayout = useCallback(event => {
+		const newLayout = {...event.nativeEvent.layout}
+		newLayout.y = newLayout.y + (Platform.OS === 'android' ? Constants.statusBarHeight : 0)
+		setLayout(newLayout)
+		setContentHeight(newLayout.height)
+	}, [])
 
 	useEffect(()=> {
 		let subscriptions = []
@@ -53,36 +70,18 @@ export default function KeyboardState({layout, children}) {
 		setKeyboardVisible(false)
 	}
 
-	// event is an obj. with properties duration, easing, startCoordinates/endCoordinates
-	// endCoordinates is an obj with height, width, screenX, screenY
-	// these refer to start and end coordinates of keyboard
 	const measureEvent = (event) => {
 		const { endCoordinates: {height, screenY},
 				duration = INITIAL_ANIMATION_DURATION
 			} = event
-		setContentHeight(screenY - layout.y)
+
+		setContentHeight(screenY - layoutRef.current.y)
 		setKeyboardHeight(height)
 		setKeyboardAnimationDuration(duration)
 	}
 
 
-	return children({
-		containerHeight: layout.height,
-		contentHeight,
-		keyboardHeight,
-		keyboardVisible,
-		keyboardWillShow,
-		keyboardWillHide,
-		keyboardAnimationDuration,
-	})
+	return {layout: layoutRef.current, onLayout, contentHeight, keyboardHeight, keyboardVisible, keyboardWillShow, keyboardWillHide, keyboardAnimationDuration}
 }
 
-KeyboardState.propTypes = {
-	layout: PropTypes.shape({
-		x: PropTypes.number.isRequired,
-		y: PropTypes.number.isRequired,
-		width: PropTypes.number.isRequired,
-		height: PropTypes.number.isRequired,
-	}).isRequired,
-	children: PropTypes.func.isRequired,
-}
+export default useKeyboard

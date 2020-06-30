@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import {useState, useCallback} from 'react'
 import {View, Platform} from 'react-native'
 import Constants from 'expo-constants'
 

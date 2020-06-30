@@ -32,7 +32,15 @@ export default function KeyboardState({layout, children}) {
 		return ()=> subscriptions.forEach(subscription => subscription.remove())
 	}, [])
 
+	useEffect(()=> {
+		console.log('incoming layout prop changed!', layout)
+	}, [layout])
+
+	console.log('line 35: ', layout)
+	console.log('line36: ', contentHeight)
 	const keyboardWillShowHandler = (event) => {
+		console.log('line 40: ', layout)
+		console.log('line 41: ', contentHeight)
 		setKeyboardWillShow(true)
 		measureEvent(event)
 	}
@@ -51,6 +59,7 @@ export default function KeyboardState({layout, children}) {
 	const keyboardDidHideHandler = () => {
 		setKeyboardWillHide(false)
 		setKeyboardVisible(false)
+		console.log('didhide: ', layout)
 	}
 
 	// event is an obj. with properties duration, easing, startCoordinates/endCoordinates

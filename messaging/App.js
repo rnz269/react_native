@@ -27,6 +27,8 @@ export default function App() {
       }),
     ])
 
+  const [sizeLoading, setSizeLoading] = useState(false)
+
   // keep track of which image is pressed
   const [fullScreenImageId, setFullScreenImageId] = useState(null)
 
@@ -180,14 +182,19 @@ export default function App() {
     }
   }
 
+  // call our custom hook
   const [layout, onLayout] = useComponentSize()
   console.log(layout)
+  // don't render KeyboardState until we can supply it with a non-null prop
+  // if {layout && (...)} is above View w/ onLayout, will never trigger re-render
+  // onLayout is what is triggering our re-render
 
 /******************** Component Return ********************/
   return (
     <View style={styles.container}>
       <Status />
       <View style={styles.layout} onLayout={onLayout}>
+      {layout && (
         <KeyboardState layout={layout}>
             {keyboardInfo => (
               <MessagingContainer
@@ -201,6 +208,7 @@ export default function App() {
               </MessagingContainer>
             )}
         </KeyboardState>
+      )}
      </View>
       {renderFullScreenImage()}
     </View>

@@ -9,13 +9,15 @@ const INITIAL_ANIMATION_DURATION = 250
 // event contains x, y, height, width
 
 const useKeyboard = () => {
-	const [layout, _setLayout] = useState(null)
-	const layoutRef = useRef(layout)
+	const [layout, setLayout] = useState(null)
 
+/* Other method: create a ref, have measureEvent use layoutRef.current.y
+	const layoutRef = useRef(layout)
 	const setLayout = (value) => {
 		layoutRef.current = value
-		_setLayout(value)
+		_setLayout(value) // change state to return [layout, _setLayout]
 	}
+*/
 	// keyboardState
 	const [contentHeight, setContentHeight] = useState(null)
 	const [keyboardHeight, setKeyboardHeight] = useState(0)
@@ -32,6 +34,36 @@ const useKeyboard = () => {
 	}, [])
 
 	useEffect(()=> {
+		const keyboardWillShowHandler = (event) => {
+			setKeyboardWillShow(true)
+			measureEvent(event)
+		}
+
+		const keyboardDidShowHandler = (event) => {
+			setKeyboardWillShow(false)
+			setKeyboardVisible(true)
+			measureEvent(event)
+		}
+
+		const keyboardWillHideHandler = (event) => {
+			setKeyboardWillHide(true)
+			measureEvent(event)
+		}
+
+		const keyboardDidHideHandler = () => {
+			setKeyboardWillHide(false)
+			setKeyboardVisible(false)
+		}
+
+		const measureEvent = (event) => {
+			const { endCoordinates: {height, screenY},
+					duration = INITIAL_ANIMATION_DURATION
+				} = event
+
+			setContentHeight(screenY - layout.y)
+			setKeyboardHeight(height)
+			setKeyboardAnimationDuration(duration)
+		}
 		let subscriptions = []
 		if (Platform.OS === 'ios') {
 			subscriptions = [
@@ -47,41 +79,9 @@ const useKeyboard = () => {
 			]
 		}
 		return ()=> subscriptions.forEach(subscription => subscription.remove())
-	}, [])
+	}, [layout])
 
-	const keyboardWillShowHandler = (event) => {
-		setKeyboardWillShow(true)
-		measureEvent(event)
-	}
-
-	const keyboardDidShowHandler = (event) => {
-		setKeyboardWillShow(false)
-		setKeyboardVisible(true)
-		measureEvent(event)
-	}
-
-	const keyboardWillHideHandler = (event) => {
-		setKeyboardWillHide(true)
-		measureEvent(event)
-	}
-
-	const keyboardDidHideHandler = () => {
-		setKeyboardWillHide(false)
-		setKeyboardVisible(false)
-	}
-
-	const measureEvent = (event) => {
-		const { endCoordinates: {height, screenY},
-				duration = INITIAL_ANIMATION_DURATION
-			} = event
-
-		setContentHeight(screenY - layoutRef.current.y)
-		setKeyboardHeight(height)
-		setKeyboardAnimationDuration(duration)
-	}
-
-
-	return {layout: layoutRef.current, onLayout, contentHeight, keyboardHeight, keyboardVisible, keyboardWillShow, keyboardWillHide, keyboardAnimationDuration}
+	return {layout: layout, onLayout, contentHeight, keyboardHeight, keyboardVisible, keyboardWillShow, keyboardWillHide, keyboardAnimationDuration}
 }
 
 export default useKeyboard

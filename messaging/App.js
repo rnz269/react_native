@@ -182,13 +182,17 @@ export default function App() {
     }
   }
 
+/*
+  const [layout, onLayout] = useComponentSize()
+  const keyboardInfo = useKeyboardState(layout)
+  console.log(keyboardInfo)
+*/
   // call our custom hook
   const {layout, onLayout, ...keyboardInfo} = useKeyboard()
   // don't render KeyboardState until we can supply it with a non-null prop
   // if {layout && (...)} is above View w/ onLayout, will never trigger re-render
   // onLayout is what is triggering our re-render
-  console.log('layout: ', layout)
-  //const keyboardInfo = useKeyboardState(layout)
+  //console.log('layout: ', layout)
 
 
 /******************** Component Return ********************/

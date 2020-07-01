@@ -5,7 +5,7 @@ const INITIAL_ANIMATION_DURATION = 250
 // component keeps track of current keyboard visibility & height
 const useKeyboardState = (layout) => {
 	// if our layout argument is null, immediately return to avoid exception
-
+	if (!layout) return {}
 // want to define keyboardInfo here to call children(keyboardInfo)
 // content height is a function of keyboard height, layout.y
 	const [contentHeight, setContentHeight] = useState(layout.height)
@@ -16,6 +16,7 @@ const useKeyboardState = (layout) => {
 	const [keyboardAnimationDuration, setKeyboardAnimationDuration] = useState(INITIAL_ANIMATION_DURATION)
 	
 	useEffect(()=> {
+
 		let subscriptions = []
 		if (Platform.OS === 'ios') {
 			subscriptions = [
@@ -31,7 +32,7 @@ const useKeyboardState = (layout) => {
 			]
 		}
 		return ()=> subscriptions.forEach(subscription => subscription.remove())
-	}, [])
+	}, [layout])
 
 	const keyboardWillShowHandler = (event) => {
 		setKeyboardWillShow(true)

@@ -6,142 +6,20 @@ import MessageList from './components/MessageList'
 import Toolbar from './components/Toolbar'
 import ImageGrid from './components/ImageGrid'
 
-import useComponentSize from './components/useComponentSize'
-import useKeyboardState from './components/useKeyboardState'
-import useKeyboard from './components/useKeyboard'
+import useKeyboard from './hooks/useKeyboard'
+import useMessaging from './hooks/useMessaging'
 
-import MessagingContainer, {
-  INPUT_METHOD,
-} from './components/MessagingContainer'
-
-import { createTextMessage, createImageMessage, createLocationMessage } from './utils/MessageUtils'
+import MessagingContainer from './components/MessagingContainer'
 
 export default function App() {
 
-  // initialize state with some data
-  const [messages, setMessages] = useState([ 
-      createImageMessage('https://unsplash.it/300/300'),
-      createTextMessage('World'),
-      createTextMessage('Hello'),
-      createLocationMessage({
-        latitude: 37.78825,
-        longitude: -122.4324,
-      }),
-    ])
+  /******************** Call Custom Hooks ********************/
+  // don't render KeyboardState until we can supply it with a non-null prop
+  // if {layout && (...)} is above View w/ onLayout, onLayout never fires -> no rerender
+  const {layout, onLayout, ...keyboardInfo} = useKeyboard()
+  const { messages, fullScreenImageId, isFocused, inputMethod, handleChangeInputMethod, dismissFullScreenImage, handleBackPress, handleChangeFocus, handlePressToolbarCamera, handlePressMessage, sendText, sendImage, handlePressToolbarLocation } = useMessaging()
 
-  // keep track of which image is pressed
-  const [fullScreenImageId, setFullScreenImageId] = useState(null)
-
-  // keep track of whether Toolbar textInput is in focus
-  const [isFocused, setIsFocused] = useState(false)
-
-  // keep track of inputMethod
-  const [inputMethod, setInputMethod] = useState(INPUT_METHOD.NONE)
-
-  const handleChangeInputMethod = (inputMethod) => {
-    setInputMethod(inputMethod)
-  }
-
-  // ON COMPONENT MOUNT
-  useEffect(()=> {
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress)
-    // remove listener at unmount
-    return ()=> {BackHandler.removeEventListener('hardwareBackPress', handleBackPress)}
-  }, [])
-
-
-  /******************** EVENT HANDLER FUNCTIONS ********************/
-  // on tap of existing message
-  const handlePressMessage = ({id, type}) => {
-    switch (type) {
-      case 'text':
-        Alert.alert(
-          'Delete message?',
-          'Are you sure you want to permanently delete this message?',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Delete',
-              style: 'destructive',
-              onPress: () => {
-                const newMessages = messages.filter(message => message.id !== id)
-                setMessages(newMessages)
-              }
-            }
-          ],
-        )
-        break
-
-      case 'image':
-        setFullScreenImageId(id)
-        setIsFocused(false)
-        default:
-        break
-    }
-  }
-
-  // fullScreenImage back to text
-  const dismissFullScreenImage = () => {
-    setFullScreenImageId(null)
-  }
-
-  // for Android's hardware back button
-  // we return true so we don't exit the app. 
-  // false exits the app, which we want to do if not in a full screen image
-  const handleBackPress = () => {
-    if (fullScreenImageId) {
-      setFullScreenImageId(null)
-      return true
-    }
-    return false
-  }
-
-  // type text and hit return
-  const sendText = text => {
-    setMessages(prevMessages => {
-      // store new message first in order to render at bottom
-      const newMessages = [createTextMessage(text), ...prevMessages]
-      return newMessages
-    })
-  }
-
-  // select an image in input editor to send
-  const sendImage = image => {
-    setMessages(prevMessages => {
-      // store new message first in order to render at bottom
-      const newMessages = [createImageMessage(image), ...prevMessages]
-      return newMessages
-    })
-  }
-
-  // send location
-  const handlePressToolbarLocation = () => {
-    setIsFocused(false)
-    // the navigator api below takes a cb function param, 
-    // called w/ coordinates object: position
-    navigator.geolocation.getCurrentPosition((position)=> {
-      setMessages(prevMessages => {
-        const newMessages = [createLocationMessage(position.coords), ...prevMessages]
-        return newMessages
-      })
-    })
-  }
-
-    // handles keyboard appear/disappear
-  const handleChangeFocus = (focus) => {
-    setIsFocused(focus)
-  }
-
-  const handlePressToolbarCamera = () => {
-    setIsFocused(false)
-    setInputMethod(INPUT_METHOD.CUSTOM)
-  }
-
-
-  /******************** Render Section Functions ********************/
+  /******************** Render Section By Section ********************/
   const renderMessageList = () => {
     return (
       <View style={styles.content}>
@@ -181,19 +59,6 @@ export default function App() {
       )
     }
   }
-
-/*
-  const [layout, onLayout] = useComponentSize()
-  const keyboardInfo = useKeyboardState(layout)
-  console.log(keyboardInfo)
-*/
-  // call our custom hook
-  const {layout, onLayout, ...keyboardInfo} = useKeyboard()
-  // don't render KeyboardState until we can supply it with a non-null prop
-  // if {layout && (...)} is above View w/ onLayout, will never trigger re-render
-  // onLayout is what is triggering our re-render
-  //console.log('layout: ', layout)
-
 
 /******************** Component Return ********************/
   return (

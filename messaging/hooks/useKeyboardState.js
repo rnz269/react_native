@@ -1,3 +1,4 @@
+// NOT USED
 import {useState, useEffect} from 'react'
 import {Keyboard, Platform} from 'react-native'
 const INITIAL_ANIMATION_DURATION = 250

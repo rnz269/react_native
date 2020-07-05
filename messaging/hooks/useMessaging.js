@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BackHandler } from 'react-native'
+import { BackHandler, Alert } from 'react-native'
 import { INPUT_METHOD } from '../components/MessagingContainer'
 import { createTextMessage, createImageMessage, createLocationMessage } from '../utils/MessageUtils'
 
@@ -124,7 +124,6 @@ const useMessaging = () => {
 
   // send location
   const handlePressToolbarLocation = () => {
-    setIsFocused(false)
     // the navigator api below takes a cb function param, 
     // called w/ coordinates object: position
     navigator.geolocation.getCurrentPosition((position)=> {

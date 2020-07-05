@@ -1,3 +1,4 @@
+// NOT USED ANYMORE
 import React, {useState, useEffect} from 'react'
 import {View, StyleSheet, Platform} from 'react-native'
 import PropTypes from 'prop-types'

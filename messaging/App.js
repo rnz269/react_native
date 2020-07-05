@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Alert, TouchableHighlight, Image, BackHandler } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Image } from 'react-native';
 
 import Status from './components/Status'
 import MessageList from './components/MessageList'
@@ -16,8 +16,8 @@ export default function App() {
   /******************** Call Custom Hooks ********************/
   // don't render KeyboardState until we can supply it with a non-null prop
   // if {layout && (...)} is above View w/ onLayout, onLayout never fires -> no rerender
-  const {layout, onLayout, ...keyboardInfo} = useKeyboard()
   const { messages, fullScreenImageId, isFocused, inputMethod, handleChangeInputMethod, dismissFullScreenImage, handleBackPress, handleChangeFocus, handlePressToolbarCamera, handlePressMessage, sendText, sendImage, handlePressToolbarLocation } = useMessaging()
+  const { onLayout, containerStyle, inputStyle } = useKeyboard(inputMethod, handleChangeInputMethod)
 
   /******************** Render Section By Section ********************/
   const renderMessageList = () => {
@@ -65,18 +65,13 @@ export default function App() {
     <View style={styles.container}>
       <Status />
       <View style={styles.layout} onLayout={onLayout}>
-      {layout && (
-        <MessagingContainer
-          {...keyboardInfo}
-          containerHeight = {layout.height}
-          inputMethod = {inputMethod}
-          onChangeInputMethod = {handleChangeInputMethod}
-          renderInputMethodEditor = {renderInputMethodEditor}
-        >
+        <View style={containerStyle}>
           {renderMessageList()}
           {renderToolbar()}
-        </MessagingContainer>
-      )}
+          <View style={inputStyle}>
+            {renderInputMethodEditor()}
+          </View>
+        </View>
      </View>
       {renderFullScreenImage()}
     </View>

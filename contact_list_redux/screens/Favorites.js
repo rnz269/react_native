@@ -22,7 +22,7 @@ function Favorites({dispatch, contacts: {isLoading, data, error}, navigation: {n
 		return (
 			<ContactThumbnail
 				avatar={avatar}
-				onPress={() => {navigate('Profile', {id: item.id})}}
+				onPress={() => {navigate('Profile', {id: item.id, name: item.name})}}
 			/>
 		)
 	}

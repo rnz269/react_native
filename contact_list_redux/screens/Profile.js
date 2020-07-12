@@ -8,23 +8,10 @@ import {connect} from 'react-redux'
 import colors from '../utils/colors'
 
 function Profile({contacts: {data}, navigation, navigation: {state: {params}}}) {
-
-	const getContact = () => {
-		const {id} = params
-		const user = data.find(contact => contact.id === id)
-		return user
-	}
-
-	const [user, setUser] = useState(getContact)
-	// navigation prop provided by HOC. Contains navigate, state, setParams, goBack
-	// destructure state to get params object, which contains one param: id.
-	// we'll use this id to find the relevant contact in store
-	useLayoutEffect(()=> {
-		navigation.setParams({
-			user: user,
-		})
-	}, [])
-
+	// use name (navigation prop) to immediately load header title on page load
+	// then, use id to grab updated stuff. Name should be same. Could implement a check & re-render if wanting to be safe.
+	const {id} = params
+	const user = data.find(contact => contact.id === id)
 	const {name, phone, avatar, email, cell} = user
 
 	return (
@@ -59,10 +46,10 @@ function Profile({contacts: {data}, navigation, navigation: {state: {params}}}) 
 
 
 Profile.navigationOptions = ({navigation: {state: {params}}}) => {
-	const {id, user} = params
+	const {id, name} = params
 
 	return {
-		title: user ? user.name.split(' ')[0] : '',
+		title: name,
 		headerTintColor: 'white',
 		headerStyle: {backgroundColor: colors.blue}
 	}

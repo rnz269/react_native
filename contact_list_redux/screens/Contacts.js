@@ -46,7 +46,7 @@ function Contacts({dispatch, contacts: {isLoading, data, error}, navigation: {na
 				)
 			)
 			if (queriedContact) {
-				navigate('Profile', { id: queriedContact.id })
+				navigate('Profile', { id: queriedContact.id, name: queriedContact.name[0] })
 			}
 		}
 	}
@@ -63,7 +63,7 @@ function Contacts({dispatch, contacts: {isLoading, data, error}, navigation: {na
 				name={item.name}
 				avatar={item.avatar}
 				phone={item.phone}
-				onPress={()=> navigate('Profile', {id: item.id})}
+				onPress={()=> navigate('Profile', {id: item.id, name: item.name})}
 			/>
 		)
 	}

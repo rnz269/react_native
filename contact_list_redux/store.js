@@ -1,3 +1,4 @@
+// NOT USED ANYMORE -- APP USES REDUX
 let state = {
   isFetchingContacts: false,
   isFetchingUser: false,

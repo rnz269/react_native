@@ -1,5 +1,4 @@
 import redux, {createStore, combineReducers, applyMiddleware} from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 
 import allContactsReducer from './allContacts'
@@ -11,6 +10,6 @@ const rootReducer = combineReducers({
 	user: userContactReducer,
 })
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 export default store

@@ -35,7 +35,15 @@ function useApp() {
     preloadNextImage();
   };
 
-  return { size, handleStartGame, handleChangeSize, puzzle, image, handleGameChange, handleQuit };
+  return {
+    size,
+    handleStartGame,
+    handleChangeSize,
+    puzzle,
+    image,
+    handleGameChange,
+    handleQuit,
+  };
 }
 
 export default useApp;

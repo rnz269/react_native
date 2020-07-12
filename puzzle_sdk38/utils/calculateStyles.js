@@ -1,10 +1,9 @@
-
-import { calculateItemSize, itemMargin } from '../utils/grid';    
+import { calculateItemSize, itemMargin } from '../utils/grid';
 
 // calculates styles for each tile
 const calculateItemStyle = (square, size, animatedValues) => {
   // calculate item size
-  const itemSize = calculateItemSize(size)
+  const itemSize = calculateItemSize(size);
   const itemStyle = {
     // position absolute so we can fit exactly where we want within parent
     position: 'absolute',
@@ -17,7 +16,7 @@ const calculateItemStyle = (square, size, animatedValues) => {
       { translateY: animatedValues.current[square].top },
       { scale: animatedValues.current[square].scale },
     ],
-  }
+  };
   // full picture put into a square would show only top left part of picture
   // however, we can push the image up and over w/ translate to show specific subset
   const imageStyle = {
@@ -30,10 +29,9 @@ const calculateItemStyle = (square, size, animatedValues) => {
       { translateX: -Math.floor(square % size) * (itemSize + itemMargin) },
       { translateY: -Math.floor(square / size) * (itemSize + itemMargin) }, // for translateY, negative pushes up, positive pushes down
     ],
-  }
+  };
 
-  return [itemStyle, imageStyle]
-}
+  return [itemStyle, imageStyle];
+};
 
-export default calculateItemStyle
-
+export default calculateItemStyle;

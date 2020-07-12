@@ -51,7 +51,7 @@ function shuffleBoard(puzzle) {
   // (1,2) into center square it becomes (2,2) and empty = (1,2)
   // center square is prev, and unmovable for next turn
   // next turn, our avail squares to move are (1,1) and (1,3)
-  // not (2,2) to prevent moving same square back and forth 
+  // not (2,2) to prevent moving same square back and forth
   /*
   for (let i = 0; i < 1000; i++) {
     const moves = movableSquares(puzzle).filter(
@@ -77,7 +77,7 @@ function shuffleBoard(puzzle) {
  */
 export function movableSquares(puzzle) {
   const { size, board, empty } = puzzle;
-  
+
   const emptyIndex = getIndex(puzzle, empty);
 
   const adjacent = [
@@ -86,10 +86,8 @@ export function movableSquares(puzzle) {
     emptyIndex % size !== 0 ? emptyIndex - 1 : null,
     emptyIndex % size !== size - 1 ? emptyIndex + 1 : null,
   ]
-    .filter(
-      index => index !== null && index >= 0 && index < size * size,
-    )
-    .map(index => board[index]);
+    .filter((index) => index !== null && index >= 0 && index < size * size)
+    .map((index) => board[index]);
 
   return adjacent;
 }

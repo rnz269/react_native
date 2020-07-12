@@ -50,7 +50,5 @@ export async function retry(count, f) {
  * @returns {Promise}
  */
 export async function invoke(options, f) {
-  return retry(options.retry || 1, () =>
-    timeout(options.timeout || 0, f),
-  );
+  return retry(options.retry || 1, () => timeout(options.timeout || 0, f));
 }

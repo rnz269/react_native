@@ -9,11 +9,7 @@ import Toggle from '../../components/Toggle';
 import styles from './styles';
 
 export default function Start({ onChangeSize, onStartGame, size }) {
-  const { transitionState, State, toggleOpacity, buttonOpacity, handlePressStart, BOARD_SIZES } = useStart(
-    onChangeSize,
-    onStartGame,
-    size,
-  );
+  const { transitionState, State, toggleOpacity, buttonOpacity, handlePressStart, BOARD_SIZES } = useStart(onStartGame);
 
   return (
     transitionState !== State.WillTransitionOut && (

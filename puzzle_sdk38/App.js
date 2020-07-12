@@ -16,6 +16,7 @@ const BACKGROUND_COLORS = ['#1B1D34', '#2A2A38'];
 
 export default function App() {
   const { size, handleStartGame, handleChangeSize, puzzle, image, handleGameChange, handleQuit } = useApp();
+
   return (
     <LinearGradient style={styles.background} colors={BACKGROUND_COLORS}>
       <StatusBar barStyle="light-content" />

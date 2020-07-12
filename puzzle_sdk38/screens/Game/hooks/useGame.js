@@ -10,7 +10,7 @@ const State = {
   WillTransitionOut: 'WillTransitionOut',
 };
 
-function useGame({ puzzle, image, onChange, onQuit }) {
+function useGame(puzzle, image, onChange, onQuit) {
   const [moves, setMoves] = useState(0);
   const [previousMove, setPreviousMove] = useState(null);
   const [transitionState, setTransitionState] = useState(null);

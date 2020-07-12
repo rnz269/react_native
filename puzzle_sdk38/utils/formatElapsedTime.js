@@ -31,5 +31,5 @@ export default function formatElapsedTime(elapsed) {
     formatNumber(seconds, hours > 0 || minutes > 0),
   ];
 
-  return parts.filter(x => x !== false).join(':');
+  return parts.filter((x) => x !== false).join(':');
 }

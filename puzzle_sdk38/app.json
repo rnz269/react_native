@@ -2,7 +2,7 @@
   "expo": {
     "name": "Puzzle",
     "slug": "puzzle",
-    "sdkVersion": "36.0.0",
+    "sdkVersion": "38.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "version": "0.1.0",

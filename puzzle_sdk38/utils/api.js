@@ -12,7 +12,7 @@ import { invoke } from './controlFlow';
  * @returns {Promise} A promise resolving to the final URL
  */
 function getRedirectURL(url) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const xhr = new XMLHttpRequest();
 
     xhr.open('GET', url, true);
@@ -31,9 +31,7 @@ function getRedirectURL(url) {
  * @returns {Promise} A promise resolving to a random image
  */
 export async function getRandomImage() {
-  const uri = await invoke({ retry: 3, timeout: 5000 }, () =>
-    getRedirectURL('https://picsum.photos/600/600/?random'),
-  );
+  const uri = await invoke({ retry: 3, timeout: 5000 }, () => getRedirectURL('https://picsum.photos/600/600/?random'));
 
   return { uri, width: 600, height: 600 };
 }

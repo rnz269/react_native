@@ -1,3 +1,4 @@
+// NOT USED ANYMORE
 import React, {useEffect} from 'react'
 import {BackHandler, LayoutAnimation, Platform, UIManager, View} from 'react-native'
 import {isIphoneX} from 'react-native-iphone-x-helper'

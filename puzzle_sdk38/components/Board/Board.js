@@ -1,5 +1,5 @@
 // Dependencies
-import React, { Memo } from 'react';
+import React, { memo } from 'react';
 import { Animated, Image, View } from 'react-native';
 import PropTypes from 'prop-types';
 import PuzzlePropType from '../../validators/PuzzlePropType';
@@ -12,15 +12,7 @@ import calculateItemStyle from './helpers/calculateStyles';
 import { handleTouchStart, handleTouchMove, handleTouchEnd } from './helpers/handlers';
 import styles from './styles';
 
-export default function Board({
-  puzzle,
-  teardown,
-  image,
-  previousMove,
-  onMoveSquare,
-  onTransitionIn,
-  onTransitionOut,
-}) {
+function Board({ puzzle, teardown, image, previousMove, onMoveSquare, onTransitionIn, onTransitionOut }) {
   const { animatedValues, transitionState, State, containerStyle } = useBoard(puzzle, onTransitionIn, previousMove);
   const renderSquare = (square, index) => {
     const { size, empty } = puzzle;
@@ -68,3 +60,5 @@ Board.defaultProps = {
   image: null,
   previousMove: null,
 };
+
+export default memo(Board);

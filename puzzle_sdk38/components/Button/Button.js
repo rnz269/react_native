@@ -23,6 +23,7 @@ export default function Button({ title, onPress, disabled, color, height, border
       toValue: getValue(pressed, disabled),
       duration: 200,
       easing: Easing.out(Easing.quad),
+      useNativeDriver: false,
     }).start();
     // eslint-disable-next-line
   }, [disabled, pressed]);

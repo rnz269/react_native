@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 import { calculateItemPosition, calculateContainerSize } from '../../../utils/grid';
 import { getIndex } from '../../../utils/puzzle';
-import { updateSquarePosition } from '../../../utils/handlers';
+import { updateSquarePosition } from '../helpers/handlers';
 
 // define finite state machine
 const State = {

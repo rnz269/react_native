@@ -1,5 +1,5 @@
 // Dependencies
-import React from 'react';
+import React, { Memo } from 'react';
 import { Animated, Image, View } from 'react-native';
 import PropTypes from 'prop-types';
 import PuzzlePropType from '../../validators/PuzzlePropType';
@@ -8,8 +8,8 @@ import Draggable from '../Draggable';
 // Custom hooks: defines Animated Values array
 import useBoard from './hooks';
 // Utils
-import calculateItemStyle from '../../utils/calculateStyles';
-import { handleTouchStart, handleTouchMove, handleTouchEnd } from '../../utils/handlers';
+import calculateItemStyle from './helpers/calculateStyles';
+import { handleTouchStart, handleTouchMove, handleTouchEnd } from './helpers/handlers';
 import styles from './styles';
 
 export default function Board({
@@ -27,7 +27,7 @@ export default function Board({
     if (square === empty) return null; // if square empty, render nothing
     // call util function to compute styles
     const [itemStyle, imageStyle] = calculateItemStyle(square, size, animatedValues);
-
+    // Animated.View is our responder owning interaction lock, ...handlers are function props
     return (
       <Draggable
         key={square}

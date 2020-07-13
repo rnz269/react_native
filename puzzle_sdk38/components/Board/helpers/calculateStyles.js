@@ -1,4 +1,4 @@
-import { calculateItemSize, itemMargin } from '../utils/grid';
+import { calculateItemSize, itemMargin } from '../../../utils/grid';
 
 // calculates styles for each tile
 const calculateItemStyle = (square, size, animatedValues) => {

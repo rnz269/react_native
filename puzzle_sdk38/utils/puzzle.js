@@ -52,19 +52,15 @@ function shuffleBoard(puzzle) {
   // center square is prev, and unmovable for next turn
   // next turn, our avail squares to move are (1,1) and (1,3)
   // not (2,2) to prevent moving same square back and forth
-  /*
+
   for (let i = 0; i < 1000; i++) {
-    const moves = movableSquares(puzzle).filter(
-      square => square !== previous,
-    );
-    const square =
-      moves[Math.floor(Math.random() * (moves.length - 1))];
+    const moves = movableSquares(puzzle).filter((square) => square !== previous);
+    const square = moves[Math.floor(Math.random() * (moves.length - 1))];
 
     // eslint-disable-next-line no-param-reassign
     puzzle = move(puzzle, square);
     previous = square;
   }
-  */
 
   return puzzle;
 }

@@ -1,10 +1,9 @@
 import { Animated } from 'react-native';
-import { availableMove } from '../utils/puzzle';
-import { calculateItemSize, calculateItemPosition, itemMargin } from '../utils/grid';
-import clamp from '../utils/clamp';
+import { availableMove } from '../../../utils/puzzle';
+import { calculateItemSize, calculateItemPosition, itemMargin } from '../../../utils/grid';
+import clamp from '../../../utils/clamp';
 
 // this file contains handler functions that will be passed to Draggable (and update tile position function)
-
 export const updateSquarePosition = (puzzle, animatedValues, square, index) => {
   const { size } = puzzle;
   const { top, left } = calculateItemPosition(size, index);

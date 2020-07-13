@@ -19,12 +19,14 @@ function useStart(onStartGame) {
 
   useEffect(() => {
     async function triggerAnimation() {
+      // only logo appears for first .5 s -- appears in middle
       await sleep(500);
       await configureTransition(() => {
         setTransitionState(State.WillTransitionIn);
       });
       // await keyword suspends progress through async function until promise resolves ^
       // so we only get here once LayoutAnimation fully completes
+      // however, the state is updated while waiting for promise to resolve, triggering rerender, so buttons are now rendered (w/ opacity of 0 till animation completes)
       Animated.timing(toggleOpacity, {
         toValue: 1,
         duration: 500,

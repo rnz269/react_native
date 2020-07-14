@@ -42,11 +42,13 @@ function useGame(puzzle, image, onChange, onQuit) {
 
   // set timerRunning to true to start timer
   // should be called after Board calls DidTransitionIn
-  // 7.13: don't think we need useCallback here
-  const handleBoardTransitionIn = () => {
+  // we need useCallback here b/c Board is memoized and receives this as a prop
+  // if we don't useCallback, this handler will be a diff obj every render of Game,
+  // which when passed to Board as prop will cause a rerender of Board
+  const handleBoardTransitionIn = useCallback(() => {
     // set relevant Game state here
     setTimerRunning(true);
-  };
+  }, []);
 
   // stop timer, transition state to RequestTransitionOut
   const requestTransitionOut = () => {

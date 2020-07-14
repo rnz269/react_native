@@ -26,10 +26,16 @@ function useApp() {
     setPuzzle(createPuzzle(size));
   };
 
+  // memoize since this is used in Game's handlePressSquare memoized cb, which is used in memoized Board component
+  // actually, memoizing this function would only save renders if App rerendered a lot.
+  // App only rerenders when puzzle pieces are moved, which should (and does) rerender children
   const handleGameChange = (newPuzzle) => {
     setPuzzle(newPuzzle);
   };
 
+  // no need to memoize this either
+  // we're memoizing Board due to Game's timer updates. However, Game rerendering doesn't
+  // mean it's receiving new props from App, since App isn't rerendering.
   const handleQuit = () => {
     setImage(null);
     setPuzzle(null);

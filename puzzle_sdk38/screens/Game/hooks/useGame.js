@@ -83,24 +83,28 @@ function useGame(puzzle, image, onChange, onQuit) {
     ]);
   };
 
-  const handlePressSquare = (square) => {
-    // if square is not adjacent to open space, we abort
-    if (!movableSquares(puzzle).includes(square)) return;
+  // must memoize, since it will be received as prop by Board component
+  const handlePressSquare = useCallback(
+    (square) => {
+      // if square is not adjacent to open space, we abort
+      if (!movableSquares(puzzle).includes(square)) return;
 
-    // otherwise, we move
-    const updated = move(puzzle, square);
-    // update local state (# moves, moved square)
-    setMoves((prevMoves) => prevMoves + 1);
-    setPreviousMove(square);
+      // otherwise, we move
+      const updated = move(puzzle, square);
+      // update local state (# moves, moved square)
+      setMoves((prevMoves) => prevMoves + 1);
+      setPreviousMove(square);
 
-    // call App's cb function to update puzzle state
-    onChange(updated);
+      // call App's cb function to update puzzle state
+      onChange(updated);
 
-    // if board is solved, request transition out
-    if (isSolved(updated)) {
-      requestTransitionOut();
-    }
-  };
+      // if board is solved, request transition out
+      if (isSolved(updated)) {
+        requestTransitionOut();
+      }
+    },
+    [onChange, puzzle],
+  );
 
   return {
     moves,

@@ -46,6 +46,8 @@ function useStart(onStartGame) {
   }, []);
 
   const handlePressStart = async () => {
+    // transitionState set and causes rerender immediately, so Start fades to empty
+    // then, after .75s animation, onStartGame is called which shifts app to Game screen
     await configureTransition(() => {
       setTransitionState(State.WillTransitionOut);
     });

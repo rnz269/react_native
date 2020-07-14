@@ -18,9 +18,7 @@ const useBoard = (puzzle, onTransitionIn, previousMove, teardown, onTransitionOu
   const squareLeft = useRef(null);
 
   // runs only once, before anything else in Board (acts like constructor)
-  // useRef returns an obj w/ a current property pointing to useRef's arg (false)
   const hasBeenCalled = useRef(false);
-
   if (!hasBeenCalled.current) {
     // destructure
     const { size, board } = puzzle;
@@ -50,9 +48,7 @@ const useBoard = (puzzle, onTransitionIn, previousMove, teardown, onTransitionOu
     hasBeenCalled.current = true;
   }
 
-  const [transitionState, setTransitionState] = useState(State.WillTransitionIn);
-
-  // helper function for initially animating squares on the board
+  // define helper function for initially animating squares on the board
   const animateAllSquares = useCallback(
     (visible) => {
       const { board, size } = puzzle;
@@ -76,7 +72,11 @@ const useBoard = (puzzle, onTransitionIn, previousMove, teardown, onTransitionOu
     [puzzle],
   );
 
-  // useEffect will rerun after each render phase w/ change in transitionState
+  // SETUP
+  // initialize transition state to WillTransitionIn
+  const [transitionState, setTransitionState] = useState(State.WillTransitionIn);
+
+  // Upon state being set to WillTransitionIn, call helper, then set state to DidTransitionIn
   useEffect(() => {
     async function setup() {
       await animateAllSquares(true);
@@ -87,6 +87,19 @@ const useBoard = (puzzle, onTransitionIn, previousMove, teardown, onTransitionOu
       setup();
     }
   }, [transitionState, onTransitionIn, animateAllSquares]);
+
+  // CLEANUP
+  // when teardown prop changes to true, want to run effect to disappear squares and transition out
+  useEffect(() => {
+    async function endGame() {
+      await animateAllSquares(false);
+      setTransitionState(State.DidTransitionOut);
+      onTransitionOut();
+    }
+    if (teardown) {
+      endGame();
+    }
+  }, [teardown, onTransitionOut, animateAllSquares]);
 
   // after board state has updated, we run this effect to physically move pieces on board
   useEffect(() => {
@@ -100,18 +113,6 @@ const useBoard = (puzzle, onTransitionIn, previousMove, teardown, onTransitionOu
       update();
     }
   }, [puzzle, animatedValues, previousMove]);
-
-  // when teardown prop changes to true, want to run effect to disappear squares and transition out
-  useEffect(() => {
-    async function endGame() {
-      await animateAllSquares(false);
-      setTransitionState(State.DidTransitionOut);
-      onTransitionOut();
-    }
-    if (teardown) {
-      endGame();
-    }
-  }, [teardown, onTransitionOut, animateAllSquares]);
 
   // style objects for size of container, items
   const containerSize = calculateContainerSize();

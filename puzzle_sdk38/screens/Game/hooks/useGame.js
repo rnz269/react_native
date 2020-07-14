@@ -42,10 +42,11 @@ function useGame(puzzle, image, onChange, onQuit) {
 
   // set timerRunning to true to start timer
   // should be called after Board calls DidTransitionIn
-  const handleBoardTransitionIn = useCallback(() => {
+  // 7.13: don't think we need useCallback here
+  const handleBoardTransitionIn = () => {
     // set relevant Game state here
     setTimerRunning(true);
-  }, []);
+  };
 
   // stop timer, transition state to RequestTransitionOut
   const requestTransitionOut = () => {
@@ -56,14 +57,14 @@ function useGame(puzzle, image, onChange, onQuit) {
     // at end of Board's destruction, Board calls handleBoardTransitionOut below
   };
 
-  const handleBoardTransitionOut = async () => {
+  const handleBoardTransitionOut = useCallback(async () => {
     // Game progresses to last phase, transitioning out, via LayoutAnimation
     // disappears gradually
     await configureTransition(() => {
       setTransitionState(State.WillTransitionOut);
     });
     onQuit();
-  };
+  }, [onQuit]);
 
   const handlePressQuit = () => {
     // pop up alert to confirm quit

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { Animated } from 'react-native';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Animated, Dimensions, Easing } from 'react-native';
 import { calculateItemPosition, calculateContainerSize } from '../../../utils/grid';
 import { getIndex } from '../../../utils/puzzle';
 import { updateSquarePosition } from '../helpers/handlers';
@@ -11,7 +11,7 @@ const State = {
   DidTransitionOut: 'DidTransitionOut',
 };
 
-const useBoard = (puzzle, onTransitionIn, previousMove) => {
+const useBoard = (puzzle, onTransitionIn, previousMove, teardown, onTransitionOut) => {
   const animatedValues = useRef(null);
   const squareScale = useRef(null);
   const squareTop = useRef(null);
@@ -26,6 +26,8 @@ const useBoard = (puzzle, onTransitionIn, previousMove) => {
     const { size, board } = puzzle;
     const temp = [];
 
+    const height = Dimensions.get('window').height;
+
     // board is our array describing current board state e.g. [0,3,2,1,4,5,7,8,6]
     // where first three indices span top row left to right
     board.forEach((square, index) => {
@@ -34,12 +36,12 @@ const useBoard = (puzzle, onTransitionIn, previousMove) => {
       // useRef can't be init in useEffect, and is required for Animated values
       // in functional components. So, we init useRef outside, use them here:
       squareScale.current = new Animated.Value(1);
-      squareTop.current = new Animated.Value(top);
+      squareTop.current = new Animated.Value(top + height);
       squareLeft.current = new Animated.Value(left);
 
       temp[square] = {
         scale: squareScale.current,
-        top: squareTop.current,
+        top: squareTop.current, // want the puzzle pieces to render offscreen to begin
         left: squareLeft.current,
       };
     });
@@ -50,13 +52,41 @@ const useBoard = (puzzle, onTransitionIn, previousMove) => {
 
   const [transitionState, setTransitionState] = useState(State.WillTransitionIn);
 
+  // helper function for initially animating squares on the board
+  const animateAllSquares = useCallback(
+    (visible) => {
+      const { board, size } = puzzle;
+
+      const height = Dimensions.get('window').height;
+
+      const animations = board.map((square, index) => {
+        const { top } = calculateItemPosition(size, index);
+
+        return Animated.timing(animatedValues.current[square].top, {
+          toValue: visible ? top : top + height,
+          duration: 400,
+          delay: 800 * (index / board.length),
+          easing: visible ? Easing.out(Easing.ease) : Easing.in(Easing.ease),
+          useNativeDriver: true,
+        });
+      });
+
+      return new Promise((resolve) => Animated.parallel(animations).start(resolve));
+    },
+    [puzzle],
+  );
+
   // useEffect will rerun after each render phase w/ change in transitionState
   useEffect(() => {
-    if (transitionState === State.WillTransitionIn) {
+    async function setup() {
+      await animateAllSquares(true);
       setTransitionState(State.DidTransitionIn);
       onTransitionIn();
     }
-  }, [transitionState, onTransitionIn]);
+    if (transitionState === State.WillTransitionIn) {
+      setup();
+    }
+  }, [transitionState, onTransitionIn, animateAllSquares]);
 
   // after board state has updated, we run this effect to physically move pieces on board
   useEffect(() => {
@@ -70,6 +100,18 @@ const useBoard = (puzzle, onTransitionIn, previousMove) => {
       update();
     }
   }, [puzzle, animatedValues, previousMove]);
+
+  // when teardown prop changes to true, want to run effect to disappear squares and transition out
+  useEffect(() => {
+    async function endGame() {
+      await animateAllSquares(false);
+      setTransitionState(State.DidTransitionOut);
+      onTransitionOut();
+    }
+    if (teardown) {
+      endGame();
+    }
+  }, [teardown, onTransitionOut, animateAllSquares]);
 
   // style objects for size of container, items
   const containerSize = calculateContainerSize();

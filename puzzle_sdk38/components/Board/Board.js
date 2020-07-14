@@ -13,7 +13,13 @@ import { handleTouchStart, handleTouchMove, handleTouchEnd } from './helpers/han
 import styles from './styles';
 
 function Board({ puzzle, teardown, image, previousMove, onMoveSquare, onTransitionIn, onTransitionOut }) {
-  const { animatedValues, transitionState, State, containerStyle } = useBoard(puzzle, onTransitionIn, previousMove);
+  const { animatedValues, transitionState, State, containerStyle } = useBoard(
+    puzzle,
+    onTransitionIn,
+    previousMove,
+    teardown,
+    onTransitionOut,
+  );
   const renderSquare = (square, index) => {
     const { size, empty } = puzzle;
     if (square === empty) return null; // if square empty, render nothing

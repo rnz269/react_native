@@ -26,7 +26,7 @@ function useStart(onStartGame) {
       });
       // await keyword suspends progress through async function until promise resolves ^
       // so we only get here once LayoutAnimation fully completes
-      // however, the state is updated while waiting for promise to resolve, triggering rerender, so buttons are now rendered (w/ opacity of 0 till animation completes)
+      // however, the state is updated while waiting for promise to resolve, triggering rerender, so buttons are now rendered (w/ opacity of 0 till layout animation completes)
       Animated.timing(toggleOpacity, {
         toValue: 1,
         duration: 500,

@@ -32,6 +32,7 @@ function useApp() {
 
   const handleQuit = () => {
     setImage(null);
+    setPuzzle(null);
     preloadNextImage();
   };
 

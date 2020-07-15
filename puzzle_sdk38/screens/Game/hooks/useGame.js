@@ -83,7 +83,7 @@ function useGame(puzzle, image, onChange, onQuit) {
     ]);
   };
 
-  // must memoize, since it will be received as prop by Board component
+  // must memoize, since it will be received as prop by memoized Board component
   const handlePressSquare = useCallback(
     (square) => {
       // if square is not adjacent to open space, we abort
